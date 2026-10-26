@@ -1,0 +1,23 @@
+{
+  "title": "Esc で英数も送る",
+  "rules": [
+    {
+      "description": "Esc / Ctrl-[ で Esc と英数を同時に送る",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "key_code": "escape" },
+          "to": [{ "key_code": "escape" }, { "key_code": "japanese_eisuu" }]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": { "mandatory": ["control"] }
+          },
+          "to": [{ "key_code": "escape" }, { "key_code": "japanese_eisuu" }]
+        }
+      ]
+    }
+  ]
+}

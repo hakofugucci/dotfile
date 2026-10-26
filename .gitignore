@@ -4,3 +4,4 @@
 **/*.pem
 **/data.json
 **/doc/tags
+**/karabiner/automatic_backups/
