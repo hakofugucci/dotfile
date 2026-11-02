@@ -74,6 +74,8 @@ brew "laishulu/homebrew/macism", trusted: true
 cask "adobe-acrobat-reader"
 # Collection of apps and services for photography, design, video, web, and UX
 cask "adobe-creative-cloud"
+# Desktop password and login vault
+cask "bitwarden"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Free app that makes your Internet safer
@@ -87,8 +89,6 @@ cask "font-sketchybar-app-font"
 cask "ghostty"
 # Keyboard customiser
 cask "karabiner-elements"
-# Full TeX Live distribution with GUI applications
-cask "mactex"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Tool that provides consistent, highly configurable symbols for apps
