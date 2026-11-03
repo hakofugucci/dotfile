@@ -1,0 +1,7 @@
+brave-origin-bin
+cbonsai
+pipes.sh
+python-terminaltexteffects
+slack-desktop
+tty-clock
+yay-bin
