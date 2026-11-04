@@ -1,5 +1,5 @@
 tap "abue-ammar/tinycast", trusted: true
-tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git"
+tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git", trusted: true
 tap "cormacrelf/tap"
 tap "felixkratz/formulae"
 tap "gammons/tap", trusted: { casks: ["slk"] }
@@ -80,6 +80,8 @@ brew "wget"
 brew "yazi"
 # Plain text note-taking assistant
 brew "zk"
+# Simple hotkey-daemon for macOS.
+brew "asmvik/formulae/skhd"
 # Watcher for macOS 10.14+ light/dark mode changes
 brew "cormacrelf/tap/dark-notify", trusted: true
 # A window border system for macOS
@@ -92,8 +94,14 @@ brew "laishulu/homebrew/macism", trusted: true
 cask "adobe-acrobat-reader"
 # Collection of apps and services for photography, design, video, web, and UX
 cask "adobe-creative-cloud"
+# Memory training application
+cask "anki"
+# Application uninstaller
+cask "appcleaner"
 # Desktop password and login vault
 cask "bitwarden"
+# 3D creation suite
+cask "blender"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Free app that makes your Internet safer
@@ -104,8 +112,12 @@ cask "font-jetbrains-mono-nerd-font"
 cask "font-sf-pro"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Web browser
+cask "google-chrome"
 # Keyboard customiser
 cask "karabiner-elements"
+# Customise mouse behavior
+cask "linearmouse"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Tool that provides consistent, highly configurable symbols for apps
@@ -114,8 +126,12 @@ cask "sf-symbols"
 cask "slack"
 # Video game digital distribution service
 cask "steam"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
 # Tiny, fully native launcher, hotkeys, and clipboard history
 cask "abue-ammar/tinycast/tinycast", trusted: true
+# Resources for Wacom tablets
+cask "wacom-tablet"
 # Video communication and virtual meeting platform
 cask "zoom"
 # Collect, organise, cite, and share research sources
