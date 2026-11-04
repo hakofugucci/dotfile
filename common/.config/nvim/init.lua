@@ -816,9 +816,12 @@ do
   -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
-    'clang-format'
+    'clang-format',
     -- You can add other tools here that you want Mason to install
   })
+  ensure_installed = vim.tbl_filter(function(n)
+    return n ~= 'clangd'
+  end, ensure_installed)
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
