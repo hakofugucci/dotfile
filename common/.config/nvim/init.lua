@@ -816,6 +816,7 @@ do
   -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
+    'clang-format'
     -- You can add other tools here that you want Mason to install
   })
 
@@ -853,6 +854,8 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
+      cpp = { 'clang-format' },
+      c = { 'clang-format' },
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
