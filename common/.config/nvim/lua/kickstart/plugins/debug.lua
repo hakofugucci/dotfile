@@ -42,6 +42,7 @@ require('mason-nvim-dap').setup {
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
     'delve',
+    'codelldb',
   },
 }
 
@@ -91,5 +92,18 @@ require('dap-go').setup {
     -- On Windows delve must be run attached or it crashes.
     -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
     detached = vim.fn.has 'win32' == 0,
+  },
+}
+-- C++ 用の起動設定（codelldb）
+dap.configurations.cpp = {
+  {
+    name = 'Launch (codelldb)',
+    type = 'codelldb',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Executable: ', vim.fn.getcwd() .. '/build/debug/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
   },
 }
