@@ -1,7 +1,7 @@
 tap "abue-ammar/tinycast", trusted: true
 tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git"
 tap "cormacrelf/tap"
-tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae"
+tap "felixkratz/formulae"
 tap "gammons/tap", trusted: { casks: ["slk"] }
 tap "laishulu/homebrew"
 # Aquarium animation in ASCII art
@@ -12,6 +12,10 @@ brew "bat"
 brew "btop"
 # Console Bonsai is a bonsai tree generator, written in C using ncurses
 brew "cbonsai"
+# Object-file caching compiler wrapper
+brew "ccache"
+# Cross-platform make
+brew "cmake"
 # Console Matrix
 brew "cmatrix"
 # Modern, maintained replacement for ls
@@ -24,16 +28,26 @@ brew "fd"
 brew "figlet"
 # User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
+# Command-line fuzzy finder written in Go
+brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Installer for the general purpose language Haskell
+brew "ghcup"
 # Distributed revision control system
 brew "git"
 # Simple terminal UI for git commands
 brew "lazygit"
+# Next-gen compiler infrastructure
+brew "llvm"
 # Rainbows and unicorns in your console!
 brew "lolcat"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Small build system for use with gyp or CMake
+brew "ninja"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
 # Animated pipes terminal screensaver
@@ -50,6 +64,10 @@ brew "rsync"
 brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Opinionated Lua code formatter
+brew "stylua"
+# Terminal multiplexer
+brew "tmux"
 # Parser generator tool
 brew "tree-sitter-cli"
 # Digital clock in ncurses
@@ -84,7 +102,6 @@ cask "cloudflare-warp"
 cask "discord"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-sf-pro"
-cask "font-sketchybar-app-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Keyboard customiser
@@ -99,16 +116,9 @@ cask "slack"
 cask "steam"
 # Tiny, fully native launcher, hotkeys, and clipboard history
 cask "abue-ammar/tinycast/tinycast", trusted: true
-# Open-source code editor
-cask "visual-studio-code"
 # Video communication and virtual meeting platform
 cask "zoom"
 # Collect, organise, cite, and share research sources
 cask "zotero"
-vscode "ms-ceintl.vscode-language-pack-ja"
-vscode "ms-python.debugpy"
-vscode "ms-python.python"
-vscode "ms-python.vscode-pylance"
-vscode "ms-python.vscode-python-envs"
 npm "emmet-language-server"
 npm "vscode-langservers-extracted"
