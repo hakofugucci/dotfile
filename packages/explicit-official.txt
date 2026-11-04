@@ -10,6 +10,9 @@ bluez
 bluez-utils
 brightnessctl
 btop
+ccache
+clang
+cmake
 cmatrix
 efibootmgr
 exfatprogs
@@ -41,6 +44,7 @@ libpulse
 linux
 linux-firmware
 linux-headers
+lldb
 lolcat
 mako
 man-db
@@ -48,6 +52,7 @@ man-pages
 mkinitcpio
 neovim
 networkmanager
+ninja
 nodejs
 noto-fonts
 noto-fonts-cjk
