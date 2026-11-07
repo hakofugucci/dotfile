@@ -2,7 +2,6 @@ tap "abue-ammar/tinycast", trusted: true
 tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git", trusted: true
 tap "cormacrelf/tap"
 tap "felixkratz/formulae"
-tap "gammons/tap", trusted: { casks: ["slk"] }
 tap "laishulu/homebrew"
 # Aquarium animation in ASCII art
 brew "asciiquarium"
