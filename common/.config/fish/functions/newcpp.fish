@@ -16,7 +16,10 @@ function newcpp
     cd $dest
     or return 1
 
-    sed -i '' "s/@NAME@/$name/g" CMakeLists.txt
+    set -l tmp (mktemp)
+    string replace -a '@NAME@' $name < CMakeLists.txt > $tmp
+    and mv $tmp CMakeLists.txt
+    or return 1    sed -i '' "s/@NAME@/$name/g" CMakeLists.txt
 
     git init -q
     git add .
