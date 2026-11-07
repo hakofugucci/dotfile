@@ -1,17 +1,28 @@
-function newcpp
+function newcpp --description 'Create a C++ project from the template'
     if test (count $argv) -ne 1
         echo "usage: newcpp NAME"
         return 1
     end
-    set name $argv[1]
-    set dest ~/dev/cpp/$name
 
+    set -l name $argv[1]
+    if not string match -rq '^[A-Za-z0-9_-]+$' -- $name
+        echo "invalid name: use letters, digits, _ and -"
+        return 1
+    end
+
+    set -l tpl ~/.config/fish/templates/cpp
+    set -l dest ~/dev/cpp/$name
+
+    if not test -d $tpl
+        echo "template not found: $tpl"
+        return 1
+    end
     if test -e $dest
         echo "already exists: $dest"
         return 1
     end
 
-    cp -r ~/dev/cpp/_template $dest
+    cp -r $tpl $dest
     or return 1
     cd $dest
     or return 1
@@ -19,7 +30,7 @@ function newcpp
     set -l tmp (mktemp)
     string replace -a '@NAME@' $name < CMakeLists.txt > $tmp
     and mv $tmp CMakeLists.txt
-    or return 1    sed -i '' "s/@NAME@/$name/g" CMakeLists.txt
+    or return 1
 
     git init -q
     git add .
