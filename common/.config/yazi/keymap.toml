@@ -1,0 +1,4 @@
+[[mgr.prepend_keymap]]
+on   = "O"
+run  = 'shell -- open -R "$1"'
+desc = "Finder で表示"

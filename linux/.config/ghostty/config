@@ -1,8 +1,0 @@
-font-family = JetBrainsMono Nerd Font
-font-size = 14
-theme = MochaBlack
-background-opacity = 0.85
-background-blur = 20
-command = fish
-window-decoration = none
-gtk-titlebar = false
