@@ -4,7 +4,7 @@ vim.loader.enable()
 -- leader は plugin や keymap より前に決める
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.g.have_nerd_font = false -- Nerd Font を導入したら true にする予定
+vim.g.have_nerd_font = true
 
 -- [[ Options ]]
 vim.o.shell = 'zsh'
@@ -29,8 +29,8 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 vim.o.clipboard = 'unnamedplus'
 vim.o.showmode = false
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
 
 -- [[ Keymaps ]]
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -67,6 +67,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
     end
   end,
 })
+
 -- telescope
 local telescope_plugins = {
   'https://github.com/nvim-lua/plenary.nvim',
@@ -106,6 +107,18 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 vim.keymap.set('n', '<leader>sn', function()
   builtin.find_files({ cwd = vim.fn.stdpath('config'), follow = true })
 end, { desc = '[S]earch [N]eovim files' })
+
+-- yazi
+vim.pack.add({ 'https://github.com/mikavilpas/yazi.nvim' })
+
+vim.g.loaded_netrwPlugin = 1
+require('yazi').setup({
+  open_for_directories = true,
+})
+
+vim.keymap.set({ 'n', 'v' }, '<leader>e', '<cmd>Yazi<cr>', { desc = 'Open yazi at the current file' })
+vim.keymap.set('n', '<leader>E', '<cmd>Yazi cwd<cr>', { desc = 'Open yazi in the working directory' })
+
 -- colorscheme
 vim.pack.add({
   { src = 'https://github.com/folke/tokyonight.nvim' },
@@ -161,6 +174,14 @@ vim.lsp.config('lua_ls', {
     },
   }
 })
+vim.lsp.config('clangd', {
+  cmd = {
+    'clangd',
+    '--background-index',
+    '--clang-tidy',
+    '--header-insertion=never',
+  },
+})
 vim.lsp.enable({'clangd', 'html', 'cssls', 'lua_ls' })
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -198,23 +219,65 @@ vim.diagnostic.config {
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- completion
+-- dap
 vim.pack.add({
-  { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1.*') },
+  "https://github.com/mfussenegger/nvim-dap",
 })
 
-require('blink.cmp').setup({
-  keymap = { preset = 'default' },
-  appearance = { nerd_font_variant = 'mono' },
-  completion = {
-    documentation = { auto_show = true, auto_show_delay_ms = 500 },
+local dap = require("dap")
+
+dap.adapters.lldb = {
+  type = "executable",
+  command = "lldb-dap",
+  name = "lldb",
+}
+
+dap.configurations.cpp = {
+  {
+    name = "Launch",
+    type = "lldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input("Executable: ", vim.fn.getcwd() .. "/", "file")
+    end,
+    cwd = "${workspaceFolder}",
+    stopOnEntry = false,
+    args = {},
   },
-  sources = {
-    default = { 'lsp', 'path', 'snippets' },
-  },
-  fuzzy = { implementation = 'prefer_rust_with_warning' },
-  signature = { enabled = true },
+}
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
+
+vim.keymap.set("n", "<F5>", dap.continue, { desc = "DAP: continue / start" })
+vim.keymap.set("n", "<F10>", dap.step_over, { desc = "DAP: step over" })
+vim.keymap.set("n", "<F11>", dap.step_into, { desc = "DAP: step into" })
+vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "DAP: toggle [b]reakpoint" })
+-- completion
+vim.pack.add({
+  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
 })
+
+require("blink.cmp").setup({
+  -- 以下は貼ってもらったまま
+})
+
+-- dap-ui
+vim.pack.add({
+  "https://github.com/nvim-neotest/nvim-nio",
+  "https://github.com/rcarriga/nvim-dap-ui",
+})
+
+local dapui = require("dapui")
+dapui.setup()
+
+-- デバッグの開始/終了に合わせてUIを開閉
+dap.listeners.before.attach.dapui_config = function() dapui.open() end
+dap.listeners.before.launch.dapui_config = function() dapui.open() end
+dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
+dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+
+vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "[D]ebug: toggle [u]i" })
+vim.keymap.set({ "n", "v" }, "<leader>de", dapui.eval, { desc = "[D]ebug: [e]val expression" })
 -- gitsigns
 vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' })
 
@@ -277,13 +340,56 @@ vim.pack.add({
   'https://github.com/NMAC427/guess-indent.nvim',
   'https://github.com/folke/todo-comments.nvim',
   'https://github.com/j-hui/fidget.nvim',
+  'https://github.com/nvim-lualine/lualine.nvim',
+  'https://github.com/lukas-reineke/indent-blankline.nvim',
 })
 
-local statusline = require('mini.statusline')
-statusline.setup({ use_icons = vim.g.have_nerd_font })
-statusline.section_location = function() return '%2l:%-2v' end
-
 require('mini.pairs').setup()
+if vim.g.have_nerd_font then
+  require('mini.icons').setup()
+  MiniIcons.mock_nvim_web_devicons()
+end
 require('guess-indent').setup({})
 require('todo-comments').setup({ signs = false })
 require('fidget').setup({})
+require('lualine').setup({
+  options = {
+    theme = 'auto',
+    icons_enabled = vim.g.have_nerd_font,
+    component_separators = '|',
+    section_separators = { left = vim.fn.nr2char(0xe0b0), right = vim.fn.nr2char(0xe0b2) },
+  },
+  sections = {
+    lualine_c = { { 'filename', path = 1 } },
+  },
+})
+local highlight = {
+    "RainbowRed",
+    "RainbowYellow",
+    "RainbowBlue",
+    "RainbowOrange",
+    "RainbowGreen",
+    "RainbowViolet",
+    "RainbowCyan",
+}
+
+local hooks = require "ibl.hooks"
+-- create the highlight groups in the highlight setup hook, so they are reset
+-- every time the colorscheme changes
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+end)
+
+require("ibl").setup {
+  indent = { highlight = highlight },
+  scope = { enabled = false },
+}
+-- 日本語入力補助
+vim.pack.add({ 'https://github.com/keaising/im-select.nvim' })
+require('im_select').setup({})

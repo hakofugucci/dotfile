@@ -1,5 +1,6 @@
 # Created by newuser for 5.9.2
-# キーバインド指定
+
+# ---------- キーバインド ----------
 zmodload zsh/terminfo
 bindkey -e
 typeset -g -A key
@@ -17,8 +18,23 @@ key[PageUp]="${terminfo[kpp]}"
 key[PageDown]="${terminfo[knp]}"
 key[Shift-Tab]="${terminfo[kcbt]}"
 
-[[ -n "${key[Up]}" ]] && bindkey -- ${key[Up]} history-beginning-search-backward
-[[ -n "${key[Down]}" ]] && bindkey -- ${key[Down]}  history-beginning-search-forward
+[[ -n "${key[Home]}" ]]      && bindkey -- "${key[Home]}"      beginning-of-line
+[[ -n "${key[End]}" ]]       && bindkey -- "${key[End]}"       end-of-line
+[[ -n "${key[Insert]}" ]]    && bindkey -- "${key[Insert]}"    overwrite-mode
+[[ -n "${key[Backspace]}" ]] && bindkey -- "${key[Backspace]}" backward-delete-char
+[[ -n "${key[Delete]}" ]]    && bindkey -- "${key[Delete]}"    delete-char
+[[ -n "${key[Left]}" ]]      && bindkey -- "${key[Left]}"      backward-char
+[[ -n "${key[Right]}" ]]     && bindkey -- "${key[Right]}"     forward-char
+[[ -n "${key[Shift-Tab]}" ]] && bindkey -- "${key[Shift-Tab]}" reverse-menu-complete
+[[ -n "${key[Up]}" ]]        && bindkey -- "${key[Up]}"        history-beginning-search-backward
+[[ -n "${key[Down]}" ]]      && bindkey -- "${key[Down]}"      history-beginning-search-forward
+# 単語移動
+bindkey '^[[1;5C' forward-word   # Ctrl+→ (Linux)
+bindkey '^[[1;5D' backward-word  # Ctrl+←
+bindkey '^[[1;3C' forward-word   # Option/Alt+→ (Mac)
+bindkey '^[[1;3D' backward-word  # Option/Alt+←
+bindkey '^[b' backward-word      # Option+←がESC bで来る端末向け
+bindkey '^[f' forward-word
 # アプリケーション状態を指定
 if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
     autoload -Uz add-zle-hook-widget
@@ -27,38 +43,159 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
     add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
     add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
 fi
-# エイリアス
+
+# ---------- オプション ----------
+setopt AUTO_CD              # ディレクトリ名だけでcd
+setopt INTERACTIVE_COMMENTS # 対話シェルで # コメントを許可
+
+# ---------- 履歴 ----------
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+
+# ---------- 補完 ----------
+fpath=(~/src/zsh-completions/src $fpath)
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
+
+# ---------- エイリアス ----------
 alias vim=nvim
 alias vi=nvim
 alias ls='eza --icons=auto'
 alias la='eza -a --icons=auto'
-alias ll='eza -|--icons=auto --git'
+alias ll='eza -l --icons=auto --git'
 alias lg=lazygit
 alias g=git
 alias gs='git status -sb'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
+
+# ---------- PATH ----------
+typeset -U path   # 重複を自動で除く
+path=($HOME/.local/bin $path)
+
+# ---------- OS別 ----------
+if [[ $OSTYPE == darwin* ]]; then
+    [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+    [[ -x /usr/local/bin/brew ]]    && eval "$(/usr/local/bin/brew shellenv)"
+    # brewのllvm・lldb
+    for p in /opt/homebrew/opt/llvm/bin /opt/homebrew/opt/lldb/bin; do
+        [[ -d $p ]] && path=($p $path)
+    done    # Archはpacmanのclangが/usr/binに入るので追加不要
+fi
+
+# ---------- ツール ----------
+
 source <(fzf --zsh)
 eval "$(zoxide init zsh)"
-# プラグイン設定
 source ~/src/zsh-autosuggestions/zsh-autosuggestions.zsh
-fpath=(~/src/zsh-completions/src $fpath)
-source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# 履歴保存
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=100000
-SAVEHIST=10000
-# 履歴をセッションを跨いで保存
-setopt SHARE_HISTORY
-# 重複削除
-setopt HIST_IGNORE_ALL_DUPS
-# 先頭スペース付きのコマンドを記録しない
-setopt HIST_IGNORE_SPACE
-# 補完
-autoload -Uz compinit
-compinit
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' menu select
-# starship
 eval "$(starship init zsh)"
 
+# ------------ 関数 ------------
+export DOTFILES="$HOME/dotfiles"
+
+# newcpp <名前>: テンプレートからC++プロジェクトを作ってビルドする
+function newcpp() {
+    if (( $# != 1 )); then
+        echo "usage: newcpp NAME"
+        return 1
+    fi
+
+    local name="$1"
+    if [[ ! $name =~ '^[A-Za-z0-9_-]+$' ]]; then
+        echo "invalid name: use letters, digits, _ and -"
+        return 1
+    fi
+
+    local tpl="$DOTFILES/common/_templates/cpp"
+    local dest="$HOME/dev/cpp/$name"
+
+    [[ -d $tpl ]]  || { echo "template not found: $tpl"; return 1 }
+    [[ -e $dest ]] && { echo "already exists: $dest"; return 1 }
+
+    cp -R "$tpl" "$dest" || return 1
+    builtin cd -- "$dest" || return 1
+
+    # @NAME@ を置換(sedを使わないのでMacとArchで差が出ない)
+    local content="$(<CMakeLists.txt)"
+    print -r -- "${content//@NAME@/$name}" > CMakeLists.txt || return 1
+
+    git init -q
+    git add .
+    git commit -qm "initial commit"
+
+    cmake --preset debug \
+        && cmake --build --preset debug \
+        && echo "ok: ./build/debug/$name"
+}
+
+# yazi: 終了時にyaziで開いていたディレクトリへcdする
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd < "$tmp"
+    [[ -n $cwd && $cwd != $PWD && -d $cwd ]] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
+}
+
+# intro: ターミナルのオープニング演出
+function intro() {
+    local name="${1:-banner}"
+    local effects=(decrypt beams slide wipe rain)
+    local picks=(matrix pipes bonsai aquarium lava genact train fortune)
+
+    case $name in
+        banner)
+            clear
+            figlet "$(whoami)" | lolcat
+            echo
+            fastfetch --pipe false | tte ${effects[RANDOM % ${#effects} + 1]}
+            ;;
+        quick)
+            figlet "$(whoami)" | lolcat
+            fastfetch
+            ;;
+        matrix)   cmatrix -C blue -b ;;
+        pipes)    pipes.sh ;;
+        bonsai)   cbonsai -l ;;
+        aquarium) asciiquarium ;;
+        lava)     lavat -c blue ;;
+        genact)   genact ;;
+        train)    sl ;;
+        fortune)  fortune | cowsay | lolcat ;;
+        random)   intro ${picks[RANDOM % ${#picks} + 1]} ;;
+        list)     echo "banner  quick  matrix  pipes  bonsai  aquarium  lava  genact  train  fortune  random" ;;
+        *)        echo "使い方: intro [banner|quick|matrix|pipes|bonsai|aquarium|lava|genact|train|fortune|random|list]" ;;
+    esac
+}
+# ---------- 必ず最後 ----------
+source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# fishの標準配色に合わせる(色番号は ANSI: 1=red 2=green 3=yellow 6=cyan 9=brred 14=brcyan)
+ZSH_HIGHLIGHT_STYLES[command]='fg=default'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=default'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=default'
+ZSH_HIGHLIGHT_STYLES[function]='fg=default'
+ZSH_HIGHLIGHT_STYLES[precommand]='fg=default'
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=default'
+ZSH_HIGHLIGHT_STYLES[default]='fg=6'                       # 引数 (fish_color_param)
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=6'
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=6'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=3'        # 引用符 (fish_color_quote)
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=3'
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=3'
+ZSH_HIGHLIGHT_STYLES[comment]='fg=1'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=2'              # ; && | (fish_color_end)
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=9'                 # エラー (fish_color_error)
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=6,bold'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=14'                     # * ? など (fish_color_operator)
+ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=14'
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=14'  # 文字列内のエスケープ (fish_color_escape)
+ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=14'
+ZSH_HIGHLIGHT_STYLES[path]='underline'                     # 存在するパス (fish_color_valid_path)
