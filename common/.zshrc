@@ -231,3 +231,9 @@ ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=14'
 ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=14'  # 文字列内のエスケープ (fish_color_escape)
 ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=14'
 ZSH_HIGHLIGHT_STYLES[path]='underline'                     # 存在するパス (fish_color_valid_path)
+
+# ---------- 起動時の演出 ----------
+# 対話シェルの最上位、かつnvim内のターミナルではないときだけ流す
+if [[ -o interactive && $SHLVL -eq 1 && -z $NVIM ]]; then
+    intro quick
+fi
