@@ -22,13 +22,15 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.o.listchars = 'tab:» ,trail:·,nbsp:␣'
 vim.o.inccommand = 'split'
 vim.o.cursorline = true
 vim.o.scrolloff = 10
 vim.o.confirm = true
 vim.o.clipboard = 'unnamedplus'
 vim.o.showmode = false
+vim.o.expandtab = true
+vim.o.softtabstop = 2
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 
@@ -45,7 +47,9 @@ vim.keymap.set('n', 'x', '"_x', { silent = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function() vim.hl.on_yank() end,
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
 
 -- [[ Plugins ]]
@@ -54,15 +58,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('PackChanged', {
   callback = function(ev)
     local name, kind = ev.data.spec.name, ev.data.kind
-    if kind ~= 'install' and kind ~= 'update' then return end
+    if kind ~= 'install' and kind ~= 'update' then
+      return
+    end
 
     if name == 'nvim-treesitter' then
-      if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+      if not ev.data.active then
+        vim.cmd.packadd('nvim-treesitter')
+      end
       vim.cmd('TSUpdate')
     elseif name == 'telescope-fzf-native.nvim' then
       local result = vim.system({ 'make' }, { cwd = ev.data.path }):wait()
       if result.code ~= 0 then
-        vim.notify('Build failed for ' .. name .. ':\n' .. (result.stderr or ''), vim.log.levels.ERROR)
+        vim.notify(
+          'Build failed for ' .. name .. ':\n' .. (result.stderr or ''),
+          vim.log.levels.ERROR
+        )
       end
     end
   end,
@@ -91,7 +102,12 @@ vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' 
 vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set({ 'n', 'v' }, '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set(
+  { 'n', 'v' },
+  '<leader>sw',
+  builtin.grep_string,
+  { desc = '[S]earch current [W]ord' }
+)
 vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
@@ -116,8 +132,18 @@ require('yazi').setup({
   open_for_directories = true,
 })
 
-vim.keymap.set({ 'n', 'v' }, '<leader>e', '<cmd>Yazi<cr>', { desc = 'Open yazi at the current file' })
-vim.keymap.set('n', '<leader>E', '<cmd>Yazi cwd<cr>', { desc = 'Open yazi in the working directory' })
+vim.keymap.set(
+  { 'n', 'v' },
+  '<leader>e',
+  '<cmd>Yazi<cr>',
+  { desc = 'Open yazi at the current file' }
+)
+vim.keymap.set(
+  'n',
+  '<leader>E',
+  '<cmd>Yazi cwd<cr>',
+  { desc = 'Open yazi in the working directory' }
+)
 
 -- colorscheme
 vim.pack.add({
@@ -131,9 +157,22 @@ vim.pack.add({
 })
 
 local parsers = {
-  'bash', 'c', 'cpp', 'diff', 'html', 'lua', 'luadoc',
-  'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'zsh',
-  'ini', 'gitignore', 'json',
+  'bash',
+  'c',
+  'cpp',
+  'diff',
+  'html',
+  'lua',
+  'luadoc',
+  'markdown',
+  'markdown_inline',
+  'query',
+  'vim',
+  'vimdoc',
+  'zsh',
+  'ini',
+  'gitignore',
+  'json',
 }
 require('nvim-treesitter').install(parsers)
 
@@ -141,8 +180,12 @@ vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('treesitter-start', { clear = true }),
   callback = function(args)
     local lang = vim.treesitter.language.get_lang(args.match)
-    if not lang then return end
-    if not vim.treesitter.language.add(lang) then return end
+    if not lang then
+      return
+    end
+    if not vim.treesitter.language.add(lang) then
+      return
+    end
     vim.treesitter.start(args.buf, lang)
 
     if vim.treesitter.query.get(lang, 'indents') then
@@ -172,7 +215,7 @@ vim.lsp.config('lua_ls', {
         library = { vim.env.VIMRUNTIME },
       },
     },
-  }
+  },
 })
 vim.lsp.config('clangd', {
   cmd = {
@@ -182,7 +225,7 @@ vim.lsp.config('clangd', {
     '--header-insertion=never',
   },
 })
-vim.lsp.enable({'clangd', 'html', 'cssls', 'lua_ls' })
+vim.lsp.enable({ 'clangd', 'html', 'cssls', 'lua_ls' })
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('telescope-lsp-attach', { clear = true }),
@@ -199,7 +242,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
-vim.diagnostic.config {
+vim.diagnostic.config({
   update_in_insert = false,
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },
@@ -208,39 +251,65 @@ vim.diagnostic.config {
   virtual_lines = true,
   jump = {
     on_jump = function(_, bufnr)
-      vim.diagnostic.open_float {
+      vim.diagnostic.open_float({
         bufnr = bufnr,
         scope = 'cursor',
         focus = false,
-      }
+      })
     end,
   },
-}
+})
 
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set(
+  'n',
+  '<leader>q',
+  vim.diagnostic.setloclist,
+  { desc = 'Open diagnostic [Q]uickfix list' }
+)
+
+-- formatting
+
+vim.pack.add({ 'https://github.com/stevearc/conform.nvim' })
+
+require('conform').setup({
+  formatters_by_ft = {
+    cpp = { 'clang_format' },
+    c = { 'clang_format' },
+    python = { 'ruff_organize_imports', 'ruff_format' }, -- または 'black'
+    rust = { 'rustfmt' },
+    html = { 'prettier' },
+    css = { 'prettier' },
+    lua = { 'stylua' },
+  },
+  default_format_opts = { lsp_format = 'fallback' }, -- 未定義の言語はLSPに任せる
+})
+
+vim.keymap.set({ 'n', 'v' }, '<leader>f', function()
+  require('conform').format({ async = true })
+end, { desc = '[F]ormat buffer or selection' })
 
 -- dap
 vim.pack.add({
-  "https://github.com/mfussenegger/nvim-dap",
+  'https://github.com/mfussenegger/nvim-dap',
 })
 
-local dap = require("dap")
+local dap = require('dap')
 
 dap.adapters.lldb = {
-  type = "executable",
-  command = "lldb-dap",
-  name = "lldb",
+  type = 'executable',
+  command = 'lldb-dap',
+  name = 'lldb',
 }
 
 dap.configurations.cpp = {
   {
-    name = "Launch",
-    type = "lldb",
-    request = "launch",
+    name = 'Launch',
+    type = 'lldb',
+    request = 'launch',
     program = function()
-      return vim.fn.input("Executable: ", vim.fn.getcwd() .. "/", "file")
+      return vim.fn.input('Executable: ', vim.fn.getcwd() .. '/', 'file')
     end,
-    cwd = "${workspaceFolder}",
+    cwd = '${workspaceFolder}',
     stopOnEntry = false,
     args = {},
   },
@@ -248,36 +317,44 @@ dap.configurations.cpp = {
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
-vim.keymap.set("n", "<F5>", dap.continue, { desc = "DAP: continue / start" })
-vim.keymap.set("n", "<F10>", dap.step_over, { desc = "DAP: step over" })
-vim.keymap.set("n", "<F11>", dap.step_into, { desc = "DAP: step into" })
-vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "DAP: toggle [b]reakpoint" })
+vim.keymap.set('n', '<F5>', dap.continue, { desc = 'DAP: continue / start' })
+vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'DAP: step over' })
+vim.keymap.set('n', '<F11>', dap.step_into, { desc = 'DAP: step into' })
+vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'DAP: toggle [b]reakpoint' })
 -- completion
 vim.pack.add({
-  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
+  { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1.*') },
 })
 
-require("blink.cmp").setup({
+require('blink.cmp').setup({
   -- 以下は貼ってもらったまま
 })
 
 -- dap-ui
 vim.pack.add({
-  "https://github.com/nvim-neotest/nvim-nio",
-  "https://github.com/rcarriga/nvim-dap-ui",
+  'https://github.com/nvim-neotest/nvim-nio',
+  'https://github.com/rcarriga/nvim-dap-ui',
 })
 
-local dapui = require("dapui")
+local dapui = require('dapui')
 dapui.setup()
 
 -- デバッグの開始/終了に合わせてUIを開閉
-dap.listeners.before.attach.dapui_config = function() dapui.open() end
-dap.listeners.before.launch.dapui_config = function() dapui.open() end
-dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
-dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+dap.listeners.before.attach.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.launch.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated.dapui_config = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited.dapui_config = function()
+  dapui.close()
+end
 
-vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "[D]ebug: toggle [u]i" })
-vim.keymap.set({ "n", "v" }, "<leader>de", dapui.eval, { desc = "[D]ebug: [e]val expression" })
+vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = '[D]ebug: toggle [u]i' })
+vim.keymap.set({ 'n', 'v' }, '<leader>de', dapui.eval, { desc = '[D]ebug: [e]val expression' })
 -- gitsigns
 vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' })
 
@@ -313,10 +390,16 @@ gitsigns.setup({
 
     map('n', '<leader>hs', gitsigns.stage_hunk, 'git [s]tage hunk')
     map('n', '<leader>hr', gitsigns.reset_hunk, 'git [r]eset hunk')
-    map('v', '<leader>hs', function() gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, 'git [s]tage hunk')
-    map('v', '<leader>hr', function() gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, 'git [r]eset hunk')
+    map('v', '<leader>hs', function()
+      gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+    end, 'git [s]tage hunk')
+    map('v', '<leader>hr', function()
+      gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+    end, 'git [r]eset hunk')
     map('n', '<leader>hp', gitsigns.preview_hunk, 'git [p]review hunk')
-    map('n', '<leader>hb', function() gitsigns.blame_line({ full = true }) end, 'git [b]lame line')
+    map('n', '<leader>hb', function()
+      gitsigns.blame_line({ full = true })
+    end, 'git [b]lame line')
     map('n', '<leader>hd', gitsigns.diffthis, 'git [d]iff against index')
     map('n', '<leader>tb', gitsigns.toggle_current_line_blame, '[T]oggle git show [b]lame line')
   end,
@@ -364,32 +447,32 @@ require('lualine').setup({
   },
 })
 local highlight = {
-    "RainbowRed",
-    "RainbowYellow",
-    "RainbowBlue",
-    "RainbowOrange",
-    "RainbowGreen",
-    "RainbowViolet",
-    "RainbowCyan",
+  'RainbowRed',
+  'RainbowYellow',
+  'RainbowBlue',
+  'RainbowOrange',
+  'RainbowGreen',
+  'RainbowViolet',
+  'RainbowCyan',
 }
 
-local hooks = require "ibl.hooks"
+local hooks = require('ibl.hooks')
 -- create the highlight groups in the highlight setup hook, so they are reset
 -- every time the colorscheme changes
 hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+  vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
+  vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
+  vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
+  vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
+  vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
+  vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
+  vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
 end)
 
-require("ibl").setup {
+require('ibl').setup({
   indent = { highlight = highlight },
   scope = { enabled = false },
-}
+})
 -- 日本語入力補助
 vim.pack.add({ 'https://github.com/keaising/im-select.nvim' })
 require('im_select').setup({})

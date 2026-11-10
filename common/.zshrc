@@ -122,6 +122,7 @@ export FZF_DEFAULT_OPTS="
 "
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#565f89'
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 source <(fzf --zsh)
 eval "$(zoxide init zsh)"
@@ -234,6 +235,6 @@ ZSH_HIGHLIGHT_STYLES[path]='underline'                     # 存在するパス 
 
 # ---------- 起動時の演出 ----------
 # 対話シェルの最上位、かつnvim内のターミナルではないときだけ流す
-if [[ -o interactive && $SHLVL -eq 1 && -z $NVIM ]]; then
+if [[ -o interactive && -z $NVIM ]]; then
     intro quick
 fi

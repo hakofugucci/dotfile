@@ -22,10 +22,9 @@ set $menu fuzzel
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 
-output * bg ~/Pictures/wallpapers/meadow-dark.png fill
+output * bg ~/Pictures/wallpapers/wallpaper.png fill
 output HDMI-A-1 mode 1920x1080@60Hz position 0 360
 output DP-3 mode 2560x1440@165Hz position 1920 0
-#
 # Example configuration:
 #
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
@@ -229,6 +228,7 @@ exec_always sh -c "pkill waybar; sleep 0.5; waybar"
 
 include /etc/sway/config.d/*
 default_border pixel 2
+
 workspace 1 output HDMI-A-1
 workspace 2 output HDMI-A-1
 workspace 3 output DP-3
@@ -236,7 +236,14 @@ workspace 4 output DP-3
 workspace 5 output DP-3
 workspace 6 output DP-3
 workspace 7 output DP-3
-workspace 8 output DP-3
-workspace 9 output DP-3
-workspace 10 output DP-3
+
+# アプリごとの振り分け(開いた時点で指定WSに入る)
+assign [app_id="com.mitchellh.ghostty"]   workspace number 1
+assign [app_id="(?i)brave.*"]             workspace number 2
+assign [app_id="obsidian"]                workspace number 3
+assign [app_id="anki"]                    workspace number 4
+assign [class="(?i)zotero"]               workspace number 4
+assign [app_id="(?i)discord|vesktop"]     workspace number 5
+assign [class="(?i)spotify"]              workspace number 6
+
 exec fcitx5 -d
