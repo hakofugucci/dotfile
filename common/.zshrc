@@ -88,16 +88,24 @@ alias lg=lazygit
 alias g=git
 alias ga='git add'
 alias gaa='git add -A'
-alias gac='git commit -a -m'
+alias gac='git add -A && git commit -m'
 alias gc='git commit -m'
 alias gcn='git commit --allow-empty-message -m ""'
-alias gacn='git commit -a --allow-empty-message -m ""'
+alias gacn='git add -A && git commit--allow-empty-message -m ""'
 alias gp='git push'
 alias gs='git status -sb'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
 alias fuck='f'
 
+# cpp c23 build
+if [[ "$(uname)" == "Darwin" ]]; then
+  export MACOSX_DEPLOYMENT_TARGET=27.2
+  LLVM=$(brew --prefix llvm)
+  alias c23="$LLVM/bin/clang++ -std=c++23 -stdlib=libc++ -L$LLVM/lib/c++ -Wl,-rpath,$LLVM/lib/c++ -Wall -Wextra"
+else
+  alias c23='clang++ -std=c++23 -stdlib=libc++ -fuse-ld=lld -Wall -Wextra'
+fi
 
 # ---------- PATH ----------
 typeset -U path   # 重複を自動で除く
