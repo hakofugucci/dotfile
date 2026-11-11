@@ -237,13 +237,4 @@ workspace 5 output DP-3
 workspace 6 output DP-3
 workspace 7 output DP-3
 
-# アプリごとの振り分け(開いた時点で指定WSに入る)
-assign [app_id="com.mitchellh.ghostty"]   workspace number 1
-assign [app_id="(?i)brave.*"]             workspace number 2
-assign [app_id="obsidian"]                workspace number 3
-assign [app_id="anki"]                    workspace number 4
-assign [class="(?i)zotero"]               workspace number 4
-assign [app_id="(?i)discord|vesktop"]     workspace number 5
-assign [class="(?i)spotify"]              workspace number 6
-
 exec fcitx5 -d
