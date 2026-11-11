@@ -247,8 +247,13 @@ vim.diagnostic.config({
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = { min = vim.diagnostic.severity.WARN } },
-  virtual_text = false,
-  virtual_lines = true,
+  virtual_text = {
+    prefix = "●",     -- 先頭の記号
+    spacing = 2,      -- コードとの間隔
+    source = "if_many",
+  }, --インライン
+  signss = true,
+  virtual_lines = false, --下に注釈
   jump = {
     on_jump = function(_, bufnr)
       vim.diagnostic.open_float({

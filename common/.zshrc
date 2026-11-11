@@ -4,6 +4,13 @@
 zmodload zsh/terminfo
 bindkey -e
 typeset -g -A key
+# history-searchを行末から開始
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+
+
+
 
 key[Home]="${terminfo[khome]}"
 key[End]="${terminfo[kend]}"
@@ -26,8 +33,8 @@ key[Shift-Tab]="${terminfo[kcbt]}"
 [[ -n "${key[Left]}" ]]      && bindkey -- "${key[Left]}"      backward-char
 [[ -n "${key[Right]}" ]]     && bindkey -- "${key[Right]}"     forward-char
 [[ -n "${key[Shift-Tab]}" ]] && bindkey -- "${key[Shift-Tab]}" reverse-menu-complete
-[[ -n "${key[Up]}" ]]        && bindkey -- "${key[Up]}"        history-beginning-search-backward
-[[ -n "${key[Down]}" ]]      && bindkey -- "${key[Down]}"      history-beginning-search-forward
+[[ -n "${key[Up]}" ]]        && bindkey -- "${key[Up]}"        history-beginning-search-backward-end
+[[ -n "${key[Down]}" ]]      && bindkey -- "${key[Down]}"      history-beginning-search-forward-end
 # 単語移動
 bindkey '^[[1;5C' forward-word   # Ctrl+→ (Linux)
 bindkey '^[[1;5D' backward-word  # Ctrl+←
@@ -47,6 +54,7 @@ fi
 # ---------- オプション ----------
 setopt AUTO_CD              # ディレクトリ名だけでcd
 setopt INTERACTIVE_COMMENTS # 対話シェルで # コメントを許可
+setopt auto_pushd
 
 # ---------- 履歴 ----------
 HISTFILE=$HOME/.zsh_history
@@ -65,16 +73,31 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 
 # ---------- エイリアス ----------
+export EDITOR=nvim
+export VISUAL=nvim
 alias vim=nvim
 alias vi=nvim
+alias v=nvim
+
+# 拡張子だけ打つと nvim で開く（suffix alias）
+alias -s {txt,md,json,toml,yaml,yml,lua,c,cpp,h,hpp,cmake,sh,zsh,py,rs,go,js,ts,html,css}=nvim
 alias ls='eza --icons=auto'
 alias la='eza -a --icons=auto'
 alias ll='eza -l --icons=auto --git'
 alias lg=lazygit
 alias g=git
+alias ga='git add'
+alias gaa='git add -A'
+alias gac='git commit -a -m'
+alias gc='git commit -m'
+alias gcn='git commit --allow-empty-message -m ""'
+alias gacn='git commit -a --allow-empty-message -m ""'
+alias gp='git push'
 alias gs='git status -sb'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
+alias fuck='f'
+
 
 # ---------- PATH ----------
 typeset -U path   # 重複を自動で除く
@@ -128,6 +151,21 @@ source <(fzf --zsh)
 eval "$(zoxide init zsh)"
 source ~/src/zsh-autosuggestions/zsh-autosuggestions.zsh
 eval "$(starship init zsh)"
+
+# carapace(補完)
+if command -v carapace >/dev/null 2>&1; then
+  source <(carapace _carapace)
+fi
+
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+
+# carapace: 他シェルの補完定義も借りる(carapace自身が未対応のコマンド用)
+export CARAPACE_BRIDGES='zsh,fish,bash'
+
+# pay-respects(コマンド修正。v0.7以降は --alias 不要、呼び出しキーは f)
+if command -v pay-respects >/dev/null 2>&1; then
+  eval "$(pay-respects zsh --alias)"
+fi
 
 # ------------ 関数 ------------
 export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
