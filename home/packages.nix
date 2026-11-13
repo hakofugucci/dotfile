@@ -9,7 +9,6 @@
     ccache
     cmake
     cmatrix
-    coreutils
     cowsay
     duf
     dust
