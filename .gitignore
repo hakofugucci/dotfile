@@ -1,7 +1,7 @@
 .DS_Store
-**/fish_variables
 **/*.key
 **/*.pem
 **/data.json
 **/doc/tags
-**/karabiner/automatic_backups/
+*.backup
+result

@@ -241,16 +241,12 @@ function intro() {
             fastfetch
             ;;
         matrix)   cmatrix -C blue -b ;;
-        pipes)    pipes.sh ;;
-        bonsai)   cbonsai -l ;;
         aquarium) asciiquarium ;;
-        lava)     lavat -c blue ;;
         genact)   genact ;;
         train)    sl ;;
-        fortune)  fortune | cowsay | lolcat ;;
         random)   intro ${picks[RANDOM % ${#picks} + 1]} ;;
-        list)     echo "banner  quick  matrix  pipes  bonsai  aquarium  lava  genact  train  fortune  random" ;;
-        *)        echo "使い方: intro [banner|quick|matrix|pipes|bonsai|aquarium|lava|genact|train|fortune|random|list]" ;;
+        list)     echo "banner  quick  matrix  aquarium  genact  train   random" ;;
+        *)        echo "使い方: intro [banner|quick|matrix|aquarium|genact|train|random|list]" ;;
     esac
 }
 # ---------- 必ず最後 ----------
