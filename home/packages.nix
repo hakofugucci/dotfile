@@ -53,5 +53,8 @@
     zsh-completions
     zsh-autosuggestions
     zsh-syntax-highlighting
+    nixd
+    nixfmt
+    clang-tools
   ];
 }

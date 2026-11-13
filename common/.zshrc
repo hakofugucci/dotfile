@@ -66,7 +66,7 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
 # ---------- 補完 ----------
-fpath=(~/src/zsh-completions/src $fpath)
+fpath=(~/.nix-profile/share/zsh/site-functions $fpath)
 autoload -Uz compinit
 compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
@@ -153,7 +153,7 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 source <(fzf --zsh)
 eval "$(zoxide init zsh)"
-source ~/src/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 eval "$(starship init zsh)"
 
 # carapace(補完)
@@ -246,7 +246,7 @@ function intro() {
     esac
 }
 # ---------- 必ず最後 ----------
-source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # fishの標準配色に合わせる(色番号は ANSI: 1=red 2=green 3=yellow 6=cyan 9=brred 14=brcyan)
 ZSH_HIGHLIGHT_STYLES[command]='fg=default'

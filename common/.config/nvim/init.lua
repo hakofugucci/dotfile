@@ -215,6 +215,7 @@ require('nvim-ts-autotag').setup()
 vim.pack.add({
   { src = 'https://github.com/neovim/nvim-lspconfig' },
 })
+
 vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
@@ -227,6 +228,7 @@ vim.lsp.config('lua_ls', {
     },
   },
 })
+
 vim.lsp.config('clangd', {
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
   cmd = {
@@ -236,7 +238,20 @@ vim.lsp.config('clangd', {
     '--header-insertion=never',
   },
 })
-
+local host = vim.fn.has('mac') == 1 and 'mac' or 'arch'
+vim.lsp.config('nixd', {
+  settings = {
+    nixd = {
+      formatting = { command = { 'nixfmt' } },
+      options = {
+        home_manager = {
+          expr = ('(builtins.getFlake (builtins.getenv "HOME" + "/dotfile")).homeConfigurations.%s.options'):format(host),
+        },
+      },
+    },
+  },
+})
+vim.lsp.enable("nixd")
 -- 名前: lspconfig の設定名 = 実行ファイル名
 local servers = {
   clangd = 'clangd',
@@ -246,6 +261,7 @@ local servers = {
   emmet_language_server = 'emmet-language-server',
   rust_analyzer = 'rust-analyzer',
   ruff = 'ruff',
+  nixd = 'nixd',
 }
 local enabled_servers = {}
 for name, bin in pairs(servers) do
@@ -312,6 +328,7 @@ require('conform').setup({
     html = { 'prettier' },
     css = { 'prettier' },
     lua = { 'stylua' },
+    nix = { 'nixfmt' },
   },
   default_format_opts = { lsp_format = 'fallback' }, -- 未定義の言語は LSP に任せる
 })

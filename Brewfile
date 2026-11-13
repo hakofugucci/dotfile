@@ -3,8 +3,6 @@ tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git", truste
 tap "felixkratz/formulae"
 # Next-gen compiler infrastructure
 brew "llvm"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node"
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd"
 # A window border system for macOS
@@ -25,13 +23,9 @@ cask "blender"
 cask "brave-browser"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
-cask "font-jetbrains-mono-nerd-font"
 cask "font-sf-pro"
-cask "font-udev-gothic-nf"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-# Web browser
-cask "librewolf"
 # Customise mouse behavior
 cask "linearmouse"
 # Knowledge base that works on top of a local folder of plain text Markdown files
@@ -50,6 +44,3 @@ cask "wacom-tablet"
 cask "zoom"
 # Collect, organise, cite, and share research sources
 cask "zotero"
-uv "terminaltexteffects"
-npm "@olrtg/emmet-language-server"
-npm "vscode-langservers-extracted"
