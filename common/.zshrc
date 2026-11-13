@@ -119,10 +119,6 @@ if [[ $OSTYPE == darwin* ]]; then
         # lazygitの設定をLinuxと同じ~/.configに揃える
         export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
     fi
-    # brewのllvm・lldb
-    for p in /opt/homebrew/opt/llvm/bin /opt/homebrew/opt/lldb/bin; do
-        [[ -d $p ]] && path=($p $path)
-    done    # Archはpacmanのclangが/usr/binに入るので追加不要
 fi
 
 # ---------- ツール ----------
@@ -177,7 +173,7 @@ fi
 
 # ------------ 関数 ------------
 export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
-export DOTFILES="$HOME/dotfiles"
+export DOTFILES="$HOME/dotfile"
 
 # newcpp <名前>: テンプレートからC++プロジェクトを作ってビルドする
 function newcpp() {

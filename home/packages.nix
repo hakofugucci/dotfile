@@ -44,5 +44,14 @@
     wget
     yazi
     zoxide
+    nodejs
+    emmet-language-server
+    vscode-langservers-extracted
+    terminaltexteffects
+    nerd-fonts.jetbrains-mono
+    udev-gothic-nf
+    zsh-completions
+    zsh-autosuggestions
+    zsh-syntax-highlighting
   ];
 }
