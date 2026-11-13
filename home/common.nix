@@ -29,5 +29,5 @@ in
 
   home.file =
     linkPackage "common"
-    // linkPackage (if pkgs.stdenv.isDarwin then "mac" else "linux");
+    // linkPackage (if pkgs.stdenv.hostPlatform.isDarwin then "mac" else "linux");
 }
