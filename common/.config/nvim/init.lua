@@ -42,6 +42,12 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 vim.keymap.set('n', 'x', '"_x', { silent = true })
+vim.keymap.set("n", "<Leader>:", "q:", { desc = "Command-line window" })
+vim.keymap.set("n", "q:", "<Nop>")
+vim.keymap.set("n", "<Leader>/", "q/", { desc = "Search history window" })
+vim.keymap.set("n", "<Leader>?", "q?", { desc = "Search history window (backward)" })
+vim.keymap.set("n", "Q", "q", { desc = "Record macro" })
+vim.keymap.set("n", "q", "<Nop>")
 
 -- [[ Autocommands ]]
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -274,7 +280,7 @@ vim.diagnostic.config({
     spacing = 2, -- コードとの間隔
     source = 'if_many',
   },
-  signs = true, 
+  signs = true,
   virtual_lines = false, -- 下に注釈
   jump = {
     on_jump = function(_, bufnr)
@@ -351,10 +357,42 @@ vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'DAP: toggle [b
 -- completion
 vim.pack.add({
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1.*') },
+  'https://github.com/rafamadriz/friendly-snippets', -- スニペット集(任意)
 })
 
--- 独自の設定を足す場合はここに書く
-require('blink.cmp').setup({})
+require('blink.cmp').setup({
+  keymap = {
+    preset = 'default', -- C-y 確定 / C-n,C-p 選択 / C-space メニュー開閉 / C-e 閉じる
+  },
+
+  appearance = {
+    nerd_font_variant = 'mono',
+  },
+
+  completion = {
+    documentation = { auto_show = true, auto_show_delay_ms = 300 },
+    menu = {
+      border = 'rounded',
+      draw = { treesitter = { 'lsp' } }, -- 補完候補を treesitter でハイライト
+    },
+    ghost_text = { enabled = true },
+  },
+
+  signature = { enabled = true, window = { border = 'rounded' } },
+
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer' },
+  },
+
+  fuzzy = {
+    implementation = 'prefer_rust_with_warning', -- 既定。Rust 版が使えなければ Lua にフォールバック
+  },
+})
+
+-- LSP に blink の capabilities を渡す(vim.lsp.enable より前に置くのが安全)
+vim.lsp.config('*', {
+  capabilities = require('blink.cmp').get_lsp_capabilities(),
+})
 
 -- dap-ui
 vim.pack.add({
