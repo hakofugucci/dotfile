@@ -16,7 +16,11 @@
         };
     in {
       homeConfigurations = {
-        mac = mkHome "aarch64-darwin" [ ./home/common.nix ./home/darwin.nix ];
+        mac = mkHome "aarch64-darwin" [
+        ./home/common.nix 
+        ./home/packages.nix 
+        ./home/darwin.nix
+        ];
       };
     };
 }

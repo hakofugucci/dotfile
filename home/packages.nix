@@ -1,0 +1,50 @@
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    asciiquarium
+    bat
+    btop
+    carapace
+    cbonsai
+    ccache
+    cmake
+    cmatrix
+    coreutils
+    cowsay
+    duf
+    dust
+    eza
+    fastfetch
+    fd
+    figlet
+    fzf
+    genact
+    gh
+    git
+    jq
+    lazygit
+    lldb
+    lolcat
+    lua-language-server
+    mise
+    neovim
+    ninja
+    pay-respects
+    poppler
+    prettier
+    ripgrep
+    rsync
+    ruff
+    rustup
+    sl
+    starship
+    stow
+    stylua
+    tmux
+    tree-sitter
+    uv
+    wget
+    yazi
+    zoxide
+  ];
+}
