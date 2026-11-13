@@ -158,23 +158,27 @@ vim.pack.add({
 
 local parsers = {
   'bash',
+  'zsh',
   'c',
   'cpp',
+  'css',
   'diff',
   'html',
   'lua',
   'luadoc',
   'markdown',
   'markdown_inline',
+  'python',
   'query',
+  'rust',
   'vim',
   'vimdoc',
-  'zsh',
   'ini',
   'gitignore',
   'json',
 }
 require('nvim-treesitter').install(parsers)
+vim.treesitter.language.register('bash', 'zsh')
 
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('treesitter-start', { clear = true }),
@@ -218,6 +222,7 @@ vim.lsp.config('lua_ls', {
   },
 })
 vim.lsp.config('clangd', {
+  filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
   cmd = {
     'clangd',
     '--background-index',
@@ -225,7 +230,24 @@ vim.lsp.config('clangd', {
     '--header-insertion=never',
   },
 })
-vim.lsp.enable({ 'clangd', 'html', 'cssls', 'lua_ls' })
+
+-- 名前: lspconfig の設定名 = 実行ファイル名
+local servers = {
+  clangd = 'clangd',
+  html = 'vscode-html-language-server',
+  cssls = 'vscode-css-language-server',
+  lua_ls = 'lua-language-server',
+  emmet_language_server = 'emmet-language-server',
+  rust_analyzer = 'rust-analyzer',
+  ruff = 'ruff',
+}
+local enabled_servers = {}
+for name, bin in pairs(servers) do
+  if vim.fn.executable(bin) == 1 then
+    table.insert(enabled_servers, name)
+  end
+end
+vim.lsp.enable(enabled_servers)
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('telescope-lsp-attach', { clear = true }),
@@ -247,13 +269,13 @@ vim.diagnostic.config({
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = { min = vim.diagnostic.severity.WARN } },
-  virtual_text = {
-    prefix = "●",     -- 先頭の記号
-    spacing = 2,      -- コードとの間隔
-    source = "if_many",
-  }, --インライン
-  signss = true,
-  virtual_lines = false, --下に注釈
+  virtual_text = { -- インライン
+    prefix = '●', -- 先頭の記号
+    spacing = 2, -- コードとの間隔
+    source = 'if_many',
+  },
+  signs = true, 
+  virtual_lines = false, -- 下に注釈
   jump = {
     on_jump = function(_, bufnr)
       vim.diagnostic.open_float({
@@ -273,20 +295,19 @@ vim.keymap.set(
 )
 
 -- formatting
-
 vim.pack.add({ 'https://github.com/stevearc/conform.nvim' })
 
 require('conform').setup({
   formatters_by_ft = {
     cpp = { 'clang_format' },
     c = { 'clang_format' },
-    python = { 'ruff_organize_imports', 'ruff_format' }, -- または 'black'
+    python = { 'ruff_organize_imports', 'ruff_format' },
     rust = { 'rustfmt' },
     html = { 'prettier' },
     css = { 'prettier' },
     lua = { 'stylua' },
   },
-  default_format_opts = { lsp_format = 'fallback' }, -- 未定義の言語はLSPに任せる
+  default_format_opts = { lsp_format = 'fallback' }, -- 未定義の言語は LSP に任せる
 })
 
 vim.keymap.set({ 'n', 'v' }, '<leader>f', function()
@@ -326,14 +347,14 @@ vim.keymap.set('n', '<F5>', dap.continue, { desc = 'DAP: continue / start' })
 vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'DAP: step over' })
 vim.keymap.set('n', '<F11>', dap.step_into, { desc = 'DAP: step into' })
 vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'DAP: toggle [b]reakpoint' })
+
 -- completion
 vim.pack.add({
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1.*') },
 })
 
-require('blink.cmp').setup({
-  -- 以下は貼ってもらったまま
-})
+-- 独自の設定を足す場合はここに書く
+require('blink.cmp').setup({})
 
 -- dap-ui
 vim.pack.add({
@@ -344,7 +365,7 @@ vim.pack.add({
 local dapui = require('dapui')
 dapui.setup()
 
--- デバッグの開始/終了に合わせてUIを開閉
+-- デバッグの開始/終了に合わせて UI を開閉
 dap.listeners.before.attach.dapui_config = function()
   dapui.open()
 end
@@ -360,6 +381,7 @@ end
 
 vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = '[D]ebug: toggle [u]i' })
 vim.keymap.set({ 'n', 'v' }, '<leader>de', dapui.eval, { desc = '[D]ebug: [e]val expression' })
+
 -- gitsigns
 vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' })
 
@@ -409,6 +431,7 @@ gitsigns.setup({
     map('n', '<leader>tb', gitsigns.toggle_current_line_blame, '[T]oggle git show [b]lame line')
   end,
 })
+
 -- which-key
 vim.pack.add({ 'https://github.com/folke/which-key.nvim' })
 
@@ -422,6 +445,7 @@ require('which-key').setup({
     { 'gr', group = 'LSP Actions', mode = { 'n' } },
   },
 })
+
 -- UI の補助
 vim.pack.add({
   'https://github.com/nvim-mini/mini.nvim',
@@ -478,6 +502,21 @@ require('ibl').setup({
   indent = { highlight = highlight },
   scope = { enabled = false },
 })
+
 -- 日本語入力補助
+--   Mac : macism（Brewfile で導入）
+--   Linux: fcitx5-remote（fcitx5 で導入）
 vim.pack.add({ 'https://github.com/keaising/im-select.nvim' })
-require('im_select').setup({})
+if vim.uv.os_uname().sysname == 'Darwin' then
+  require('im_select').setup({
+    default_command = 'macism',
+    default_im_select = 'com.apple.keylayout.ABC',
+    keep_quiet_on_no_binary = true,
+  })
+else
+  require('im_select').setup({
+    default_command = 'fcitx5-remote',
+    default_im_select = 'keyboard-us',
+    keep_quiet_on_no_binary = true,
+  })
+end
