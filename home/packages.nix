@@ -5,7 +5,6 @@
     bat
     btop
     carapace
-    cbonsai
     ccache
     cmake
     cmatrix

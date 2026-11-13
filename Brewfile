@@ -1,6 +1,5 @@
 tap "abue-ammar/tinycast", trusted: true
 tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git", trusted: true
-tap "cormacrelf/tap"
 tap "felixkratz/formulae"
 tap "laishulu/homebrew"
 tap "timescam/tap", trusted: true
@@ -14,7 +13,6 @@ brew "bat"
 # Cross-platform make
 # Console Matrix
 # GNU File, Shell, and Text utilities
-brew "coreutils"
 # Apjanke's fork of the classic cowsay project
 # Disk Usage/Free Utility - a better 'df' alternative
 # More intuitive version of du in rust
@@ -44,11 +42,9 @@ brew "llvm"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
 # Animated pipes terminal screensaver
-brew "pipes-sh"
 # PDF rendering library (based on the xpdf-3.0 code base)
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
 # Search tool like grep and The Silver Searcher
-brew "ripgrep"
 # Utility that provides fast incremental file transfer
 # Extremely fast Python linter, written in Rust
 # Rust toolchain installer
@@ -58,9 +54,7 @@ brew "ripgrep"
 # Opinionated Lua code formatter
 # Terminal multiplexer
 # Parser generator tool
-brew "tree-sitter-cli"
 # Digital clock in ncurses
-brew "tty-clock"
 # Extremely fast Python package installer and resolver, written in Rust
 # Internet file retriever
 # Blazing fast terminal file manager written in Rust, based on async I/O
@@ -68,7 +62,6 @@ brew "tty-clock"
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd"
 # Watcher for macOS 10.14+ light/dark mode changes
-brew "cormacrelf/tap/dark-notify", trusted: true
 # A window border system for macOS
 brew "felixkratz/formulae/borders", trusted: true
 # Custom macOS statusbar with shell plugin, interaction and graph support
