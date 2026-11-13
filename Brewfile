@@ -4,7 +4,6 @@ tap "cormacrelf/tap"
 tap "felixkratz/formulae"
 tap "laishulu/homebrew"
 tap "timescam/tap", trusted: true
-tap "veirt/veirt", "https://github.com/Veirt/homebrew-veirt"
 # Aquarium animation in ASCII art
 brew "asciiquarium"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -65,8 +64,6 @@ brew "lolcat"
 brew "lua-language-server"
 # Polyglot runtime manager (asdf rust clone)
 brew "mise"
-# Music Player Daemon
-brew "mpd"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Small build system for use with gyp or CMake
@@ -95,8 +92,6 @@ brew "starship"
 brew "stow"
 # Opinionated Lua code formatter
 brew "stylua"
-# Programmatically correct mistyped console commands
-brew "thefuck"
 # Terminal multiplexer
 brew "tmux"
 # Parser generator tool
@@ -105,14 +100,10 @@ brew "tree-sitter-cli"
 brew "tty-clock"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
-# Language servers for HTML, CSS, JavaScript, and JSON extracted from vscode
-brew "vscode-langservers-extracted", link: false
 # Internet file retriever
 brew "wget"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
-# Plain text note-taking assistant
-brew "zk"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Simple hotkey-daemon for macOS.
@@ -127,10 +118,6 @@ brew "felixkratz/formulae/sketchybar", trusted: true
 brew "laishulu/homebrew/macism", trusted: true
 # CLI tool to pay respects
 brew "timescam/tap/pay-respects"
-# Terminal weather app with ASCII animations
-brew "veirt/veirt/weathr", trusted: true
-# View, print, and comment on PDF documents
-cask "adobe-acrobat-reader"
 # Collection of apps and services for photography, design, video, web, and UX
 cask "adobe-creative-cloud"
 # Memory training application
@@ -145,15 +132,11 @@ cask "blender"
 cask "brave-browser"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
-# Voice and text chat software
-cask "discord"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-sf-pro"
 cask "font-udev-gothic-nf"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-# Keyboard customiser
-cask "karabiner-elements"
 # Web browser
 cask "librewolf"
 # Customise mouse behavior
@@ -166,8 +149,6 @@ cask "sf-symbols"
 cask "slack"
 # Video game digital distribution service
 cask "steam"
-# Mesh VPN based on WireGuard
-cask "tailscale-app"
 # Application launcher and productivity tool
 cask "tinycast"
 # Resources for Wacom tablets
@@ -177,5 +158,5 @@ cask "zoom"
 # Collect, organise, cite, and share research sources
 cask "zotero"
 uv "terminaltexteffects"
-npm "emmet-language-server"
+npm "@olrtg/emmet-language-server"
 npm "vscode-langservers-extracted"
