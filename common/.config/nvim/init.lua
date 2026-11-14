@@ -33,6 +33,8 @@ vim.o.expandtab = true
 vim.o.softtabstop = 2
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
+vim.opt_local.makeprg = 'cmake --build --preset debug'
+vim.opt_local.errorformat = '%f:%l:%c: %t%*[^:]: %m,%f:%l: %t%*[^:]: %m'
 
 -- [[ Keymaps ]]
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')

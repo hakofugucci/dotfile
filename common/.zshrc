@@ -101,7 +101,7 @@ alias fuck='f'
 # cpp c23 build
 if [[ "$(uname)" == "Darwin" ]]; then
   export MACOSX_DEPLOYMENT_TARGET=27.2
-  LLVM=$(brew --prefix llvm)
+  LLVM=/opt/homebrew/opt/llvm
   alias c23="$LLVM/bin/clang++ -std=c++23 -stdlib=libc++ -L$LLVM/lib/c++ -Wl,-rpath,$LLVM/lib/c++ -Wall -Wextra"
 else
   alias c23='clang++ -std=c++23 -stdlib=libc++ -fuse-ld=lld -Wall -Wextra'

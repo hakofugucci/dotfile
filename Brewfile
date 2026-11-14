@@ -44,3 +44,4 @@ cask "wacom-tablet"
 cask "zoom"
 # Collect, organise, cite, and share research sources
 cask "zotero"
+cask "alfred"
