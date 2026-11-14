@@ -238,6 +238,8 @@ vim.lsp.config('clangd', {
     '--background-index',
     '--clang-tidy',
     '--header-insertion=never',
+    '--query-driver=/nix/store/*/bin/clang*',
+    '--compile-commands-dir=build/debug',
   },
 })
 local flake = '(builtins.getFlake (builtins.getenv "HOME" + "/dotfile"))'

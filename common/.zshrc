@@ -184,14 +184,14 @@ function newcpp() {
         return 1
     fi
 
-    local name="$1"
-    if [[ ! $name =~ '^[A-Za-z0-9_-]+$' ]]; then
+    local proj="$1"
+    if [[ ! $proj =~ '^[A-Za-z0-9_-]+$' ]]; then
         echo "invalid name: use letters, digits, _ and -"
         return 1
     fi
 
     local tpl="$DOTFILES/common/_templates/cpp"
-    local dest="$HOME/dev/cpp/$name"
+    local dest="$HOME/dev/cpp/$proj"
 
     [[ -d $tpl ]]  || { echo "template not found: $tpl"; return 1 }
     [[ -e $dest ]] && { echo "already exists: $dest"; return 1 }
@@ -201,15 +201,19 @@ function newcpp() {
 
     # @NAME@ を置換(sedを使わないのでMacとArchで差が出ない)
     local content="$(<CMakeLists.txt)"
-    print -r -- "${content//@NAME@/$name}" > CMakeLists.txt || return 1
+    print -r -- "${content//@NAME@/$proj}" > CMakeLists.txt || return 1
 
     git init -q
     git add .
+    nix flake lock || return 1
+    git add flake.lock
     git commit -qm "initial commit"
+    # flakeの開発環境の中でビルドする(direnvに依存しない)
+    nix develop -c cmake --preset debug \
+        && nix develop -c cmake --build --preset debug \
+        && echo "ok: ./build/debug/$proj"
 
-    cmake --preset debug \
-        && cmake --build --preset debug \
-        && echo "ok: ./build/debug/$name"
+    command -v direnv >/dev/null && direnv allow
 }
 
 # yazi: 終了時にyaziで開いていたディレクトリへcdする
