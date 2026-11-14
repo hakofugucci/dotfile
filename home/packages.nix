@@ -56,5 +56,10 @@
     nixd
     nixfmt
     clang-tools
+    gcc
   ];
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 }

@@ -240,16 +240,14 @@ vim.lsp.config('clangd', {
     '--header-insertion=never',
   },
 })
-local host = vim.fn.has('mac') == 1 and 'mac' or 'arch'
+local flake = '(builtins.getFlake (builtins.getenv "HOME" + "/dotfile"))'
 vim.lsp.config('nixd', {
   settings = {
     nixd = {
       formatting = { command = { 'nixfmt' } },
-      options = {
-        home_manager = {
-          expr = ('(builtins.getFlake (builtins.getenv "HOME" + "/dotfile")).homeConfigurations.%s.options'):format(host),
-        },
-      },
+      options = vim.fn.has('mac') == 1
+        and { home_manager = { expr = flake .. '.homeConfigurations.mac.options' } }
+        or  { nixos = { expr = flake .. '.nixosConfigurations.nixos.options' } },
     },
   },
 })

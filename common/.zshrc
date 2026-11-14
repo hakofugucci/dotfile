@@ -171,6 +171,8 @@ if command -v pay-respects >/dev/null 2>&1; then
   eval "$(pay-respects zsh --alias)"
 fi
 
+# direnv hook
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 # ------------ 関数 ------------
 export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
 export DOTFILES="$HOME/dotfile"
