@@ -25,6 +25,7 @@
   };
   programs.zsh.enable = true;
   programs.nix-ld.enable = true;
+  programs.ssh.startAgent = true;
 
   # --- NVIDIA（RTX 4060）---
   services.xserver.videoDrivers = [ "nvidia" ];
