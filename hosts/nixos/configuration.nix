@@ -24,6 +24,7 @@
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
+  programs.nix-ld.enable = true;
 
   # --- NVIDIA（RTX 4060）---
   services.xserver.videoDrivers = [ "nvidia" ];

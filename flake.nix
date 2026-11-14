@@ -21,11 +21,6 @@
           ./home/packages.nix
           ./home/darwin.nix
         ];
-        arch = mkHome "x86_64-linux" [
-          ./home/dotfile.nix
-          ./home/packages.nix
-          ./home/linux.nix
-        ];
       };
 
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
@@ -34,7 +29,7 @@
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
+            home-manager.useUserPackages = false;
             home-manager.users.hakof = {
               imports = [
                 ./home/dotfile.nix

@@ -9,11 +9,12 @@ let
     let
       root      = ../${pkg};
       configDir = root + "/.config";
+      excluded  = [ ".config" "_templates" ".DS_Store" ];
       top       = builtins.attrNames (builtins.readDir root);
       inConfig  = lib.optionals (builtins.pathExists configDir)
         (map (n: ".config/${n}") (builtins.attrNames (builtins.readDir configDir)));
     in
-      (lib.filter (n: n != ".config") top) ++ inConfig;
+      (lib.subtractLists excluded top) ++ inConfig;
 
   # 各単位を、リポジトリ内の実体へのリンクにする
   linkPackage = pkg:
