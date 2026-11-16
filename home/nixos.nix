@@ -12,5 +12,6 @@
     wl-clipboard
     brave-origin
     bitwarden-desktop # password manager
+    anki
   ];
 }
