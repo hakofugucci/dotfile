@@ -1,8 +1,12 @@
 [mgr]
 show_hidden  = true   # 隠しファイルを表示
 show_symlink = true
-
+ratio = [1, 4, 0]
 [opener]
 edit = [
   { run = "nvim %s", block = true },
 ]
+[preview]
+image_delay = 50      # 画像を出すまでの待ち時間(ms)。高速に動かすときのちらつきが減る
+max_width   = 600     # 画像を小さくして負荷を下げる
+max_height  = 900

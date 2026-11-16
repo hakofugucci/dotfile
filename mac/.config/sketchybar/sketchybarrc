@@ -6,7 +6,7 @@ source "$CONFIG_DIR/colors.sh"
 
 # General Bar Properties
 sketchybar --bar position=bottom \
-               height=43 \
+               height=30 \
                blur_radius=30 \
                color=0x00000000 \
                display=all \

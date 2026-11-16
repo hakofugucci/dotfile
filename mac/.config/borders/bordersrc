@@ -1,3 +1,10 @@
 #!/bin/bash
 source "$HOME/.config/sketchybar/colors.sh"
-borders style=round width=6.0 hidpi=on active_color=$COLOR_BORDER_ACTIVE inactive_color=$COLOR_BORDER_INACTIVE
+options=(
+  style=round
+  width=6.0
+  hidpi=on
+active_color=$COLOR_BORDER_ACTIVE
+  inactive_color=$COLOR_BORDER_INACTIVE
+)
+borders "${options[@]}"

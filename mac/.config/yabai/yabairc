@@ -8,8 +8,8 @@ yabai -m config layout bsp
 yabai -m config window_placement second_child
 
 # 余白
-yabai -m config top_padding 5
-yabai -m config bottom_padding 48
+yabai -m config top_padding 2
+yabai -m config bottom_padding 40
 yabai -m config left_padding 5
 yabai -m config right_padding 5
 yabai -m config window_gap 5
@@ -22,3 +22,11 @@ yabai -m rule --add app="^(Finder)$" title="^(コピー|情報|Copy|Info).*" man
 
 yabai -m signal --add event=display_added   action="$HOME/.config/yabai/arrange.sh"
 yabai -m signal --add event=display_removed action="sketchybar --reload"
+
+yabai -m config window_animation_duration 0.35
+yabai -m config window_animation_easing   ease_out_quint
+yabai -m config window_opacity            on
+yabai -m config window_opacity_duration   0.35
+yabai -m config active_window_opacity     1.0
+yabai -m config normal_window_opacity     0.85
+yabai -m config window_shadow             float
