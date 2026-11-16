@@ -57,6 +57,7 @@
     nixfmt
     clang-tools
     gcc
+    firefox
   ];
   programs.direnv = {
     enable = true;

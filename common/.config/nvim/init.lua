@@ -381,7 +381,7 @@ vim.pack.add({
 
 require('blink.cmp').setup({
   keymap = {
-    preset = 'default', -- C-y 確定 / C-n,C-p 選択 / C-space メニュー開閉 / C-e 閉じる
+    preset = 'default',
   },
 
   appearance = {
@@ -392,7 +392,10 @@ require('blink.cmp').setup({
     documentation = { auto_show = true, auto_show_delay_ms = 300 },
     menu = {
       border = 'rounded',
-      draw = { treesitter = { 'lsp' } }, -- 補完候補を treesitter でハイライト
+      draw = { treesitter = { 'lsp' } },
+      auto_show = function()
+        return vim.bo.filetype ~= 'markdown'
+      end,
     },
     ghost_text = { enabled = true },
   },
@@ -404,7 +407,7 @@ require('blink.cmp').setup({
   },
 
   fuzzy = {
-    implementation = 'prefer_rust_with_warning', -- 既定。Rust 版が使えなければ Lua にフォールバック
+    implementation = 'prefer_rust_with_warning',
   },
 })
 

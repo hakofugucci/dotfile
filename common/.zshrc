@@ -1,6 +1,12 @@
 # Created by newuser for 5.9.2
-
-# ---------- キーバインド ----------
+if [[ -n $ZSH_PROF ]]; then
+  zmodload zsh/zprof zsh/datetime
+  _t0=$EPOCHREALTIME
+  _lap() { printf '%7.1f ms  %s\n' $(( (EPOCHREALTIME - _t0) * 1000 )) "$1" >&2; _t0=$EPOCHREALTIME }
+else
+  _lap() { :; }
+fi
+# ---------- キーバインド ---------- 
 zmodload zsh/terminfo
 bindkey -e
 typeset -g -A key
@@ -51,12 +57,16 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
     add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
 fi
 
+_lap keybinds
+
 # ---------- オプション ----------
 setopt AUTO_CD              # ディレクトリ名だけでcd
 setopt INTERACTIVE_COMMENTS # 対話シェルで # コメントを許可
 setopt auto_pushd
 
 # ---------- 履歴 ----------
+
+
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
@@ -65,12 +75,26 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
+_lap history
+
 # ---------- 補完 ----------
 fpath=(~/.nix-profile/share/zsh/site-functions $fpath)
+
 autoload -Uz compinit
-compinit
+() {
+  setopt local_options extended_glob
+  local dump=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
+  mkdir -p ${dump:h}
+  if [[ ! -f $dump || -n $dump(#qN.mh+24) ]]; then
+    compinit -d $dump
+  else
+    compinit -C -d $dump
+  fi
+}
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
+
+_lap compinit
 
 # ---------- エイリアス ----------
 export EDITOR=nvim
@@ -111,16 +135,6 @@ fi
 typeset -U path   # 重複を自動で除く
 path=($HOME/.local/bin $path)
 
-# ---------- OS別 ----------
-if [[ $OSTYPE == darwin* ]]; then
-    [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
-    [[ -x /usr/local/bin/brew ]]    && eval "$(/usr/local/bin/brew shellenv)"
-    if [[ $OSTYPE == darwin* ]]; then
-        # lazygitの設定をLinuxと同じ~/.configに揃える
-        export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
-    fi
-fi
-
 # ---------- ツール ----------
 # fzfの配色(tokyonight-night)
 export FZF_DEFAULT_OPTS="
@@ -151,28 +165,41 @@ export FZF_DEFAULT_OPTS="
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#565f89'
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-source <(fzf --zsh)
-eval "$(zoxide init zsh)"
-source ~/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-eval "$(starship init zsh)"
+_cache_eval() {                       # 使い方: _cache_eval 名前 コマンド 引数...
+  local name=$1; shift
+  local real=${${commands[$1]}:A}     # コマンドの実体パス（シンボリックリンクを解決）
+  [[ -n $real ]] || return 0          # コマンドが無ければ何もしない
+  local key="# $real $*"
+  local f=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/$name.zsh first=
+  [[ -r $f ]] && IFS= read -r first < $f
+  if [[ $first != $key ]]; then       # 初回か、パス・引数が変わったときだけ再生成
+    local out
+    out=$("$@") || return 0           # 失敗したらキャッシュしない
+    mkdir -p ${f:h}
+    print -r -- "$key"$'\n'"$out" >| $f
+  fi
+  source $f
+}
 
-# carapace(補完)
-if command -v carapace >/dev/null 2>&1; then
-  source <(carapace _carapace)
-fi
-
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-
-# carapace: 他シェルの補完定義も借りる(carapace自身が未対応のコマンド用)
+_cache_eval fzf fzf --zsh
+_lap fzf
+_cache_eval zoxide zoxide init zsh
+_lap zoxide
+_cache_eval starship starship init zsh --print-full-init
+_lap starship
+_cache_eval direnv direnv hook zsh
+_lap direnv
+_cache_eval pay-respects pay-respects zsh --alias
+_lap pay-respects
 export CARAPACE_BRIDGES='zsh,fish,bash'
+_cache_eval carapace carapace _carapace
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+_lap carapace
 
-# pay-respects(コマンド修正。v0.7以降は --alias 不要、呼び出しキーは f)
-if command -v pay-respects >/dev/null 2>&1; then
-  eval "$(pay-respects zsh --alias)"
-fi
+source ~/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+_lap autosuggestions
 
-# direnv hook
-command -v direnv >/dev/null && eval "$(direnv hook zsh)"
+
 # ------------ 関数 ------------
 export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
 export DOTFILES="$HOME/dotfile"
@@ -197,6 +224,7 @@ function newcpp() {
     [[ -e $dest ]] && { echo "already exists: $dest"; return 1 }
 
     cp -R "$tpl" "$dest" || return 1
+    direnv allow "$dest" >/dev/null
     builtin cd -- "$dest" || return 1
 
     # @NAME@ を置換(sedを使わないのでMacとArchで差が出ない)
@@ -212,8 +240,6 @@ function newcpp() {
     nix develop -c cmake --preset debug \
         && nix develop -c cmake --build --preset debug \
         && echo "ok: ./build/debug/$proj"
-
-    command -v direnv >/dev/null && direnv allow
 }
 
 # yazi: 終了時にyaziで開いていたディレクトリへcdする
@@ -254,6 +280,9 @@ function intro() {
 # ---------- 必ず最後 ----------
 source ~/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+_lap syntax-highlighting
+
+
 # fishの標準配色に合わせる(色番号は ANSI: 1=red 2=green 3=yellow 6=cyan 9=brred 14=brcyan)
 ZSH_HIGHLIGHT_STYLES[command]='fg=default'
 ZSH_HIGHLIGHT_STYLES[builtin]='fg=default'
@@ -279,6 +308,7 @@ ZSH_HIGHLIGHT_STYLES[path]='underline'                     # 存在するパス 
 
 # ---------- 起動時の演出 ----------
 # 対話シェルの最上位、かつnvim内のターミナルではないときだけ流す
-if [[ -o interactive && -z $NVIM ]]; then
-    intro quick
+if [[ -o interactive && -z $NVIM && -z $TMUX && $SHLVL -le 1 ]]; then
+    fastfetch
 fi
+

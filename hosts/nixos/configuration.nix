@@ -27,6 +27,13 @@
   programs.nix-ld.enable = true;
   programs.ssh.startAgent = true;
 
+  # --- 自動清掃 ---
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
+  nix.settings.auto-optimise-store = true;   # 同一ファイルをハードリンクで共有（容量の節約）
   # --- NVIDIA（RTX 4060）---
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
