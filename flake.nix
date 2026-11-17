@@ -60,6 +60,7 @@
                 ./home/packages.nix
                 ./home/linux.nix
                 ./home/nixos.nix
+                ./home/rice.nix
               ];
             };
           }
