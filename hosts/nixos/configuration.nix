@@ -51,6 +51,13 @@
     extraOptions = [ "--unsupported-gpu" ];
   };
 
+  # --- niri / Hyprland（切り替え用）---
+  programs.niri.enable = true;
+  programs.hyprland.enable = true;
+  security.polkit.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  services.gnome.gcr-ssh-agent.enable = false;
+
   # --- 音 ---
   security.rtkit.enable = true;
   services.pipewire = {

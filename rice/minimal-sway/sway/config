@@ -16,8 +16,8 @@ set $right l
 # Your preferred terminal emulator
 set $term ghostty
 # Your preferred application launcher
-set $menu fuzzel
-
+set $rice /home/hakof/.config/rice/minimal-sway
+set $menu fuzzel --config=$rice/fuzzel/fuzzel.ini
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
@@ -224,7 +224,7 @@ bindsym $mod+r mode "resize"
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
-exec_always sh -c "pkill waybar; sleep 0.5; waybar"
+exec_always sh -c "pkill waybar; sleep 0.5; waybar -c $rice/waybar/config.jsonc -s $rice/waybar/style.css"
 
 include /etc/sway/config.d/*
 default_border pixel 2
