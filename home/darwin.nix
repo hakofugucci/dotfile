@@ -1,11 +1,9 @@
 { pkgs, ... }:
 {
-  home.username = "hakofugucci";
-  home.homeDirectory = "/Users/hakofugucci";
+  home.username = "hakof";
+  home.homeDirectory = "/Users/hakof";
 
   home.packages = with pkgs; [
-    jankyborders
     macism
-    sketchybar
   ];
 }
