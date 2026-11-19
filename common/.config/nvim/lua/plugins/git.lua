@@ -1,0 +1,77 @@
+-- [[ Git ]]
+vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' })
+
+local gitsigns = require('gitsigns')
+gitsigns.setup({
+  signs = {
+    add = { text = '+' },
+    change = { text = '~' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
+    changedelete = { text = '~' },
+  },
+  on_attach = function(bufnr)
+    local map = function(mode, lhs, rhs, desc)
+      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+    end
+
+    map('n', ']c', function()
+      if vim.wo.diff then
+        vim.cmd.normal({ ']c', bang = true })
+      else
+        gitsigns.nav_hunk('next')
+      end
+    end, 'Git hunk: next')
+
+    map('n', '[c', function()
+      if vim.wo.diff then
+        vim.cmd.normal({ '[c', bang = true })
+      else
+        gitsigns.nav_hunk('prev')
+      end
+    end, 'Git hunk: previous')
+
+    map('n', '<leader>hs', gitsigns.stage_hunk, 'Git hunk: stage')
+    map('n', '<leader>hr', gitsigns.reset_hunk, 'Git hunk: reset')
+    map('v', '<leader>hs', function()
+      gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+    end, 'Git hunk: stage')
+    map('v', '<leader>hr', function()
+      gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+    end, 'Git hunk: reset')
+    map('n', '<leader>hp', gitsigns.preview_hunk, 'Git hunk: preview')
+    map('n', '<leader>hb', function()
+      gitsigns.blame_line({ full = true })
+    end, 'Git hunk: blame line')
+    map('n', '<leader>hd', gitsigns.diffthis, 'Git hunk: diff against index')
+    map('n', '<leader>hS', gitsigns.stage_buffer, 'Git hunk: stage buffer')
+    map('n', '<leader>hR', gitsigns.reset_buffer, 'Git hunk: reset buffer')
+    map('n', '<leader>tb', gitsigns.toggle_current_line_blame, 'Toggle: git blame line')
+  end,
+})
+
+vim.pack.add({
+  'https://github.com/nvim-lua/plenary.nvim',
+  'https://github.com/dlyongemallo/diffview-plus.nvim', -- optional
+  'https://github.com/NeogitOrg/neogit',
+})
+
+require('neogit').setup({
+  integrations = {
+    telescope = true,
+    diffview = true,
+  },
+  commit_editor = {
+    kind = 'tab',
+    show_staged_diff = true,
+    staged_diff_split_kind = 'split',
+  },
+  graph_style = 'unicode',
+})
+
+vim.keymap.set('n', '<leader>gg', function()
+  require('neogit').open()
+end, { desc = 'Git: Neogit' })
+vim.keymap.set('n', '<leader>gc', function()
+  require('neogit').open({ 'commit' })
+end, { desc = 'Git: Neogit commit' })
