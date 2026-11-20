@@ -56,7 +56,6 @@ gitsigns.setup({
         end
       end
     end, 'Git hunk: close diff')
-    map('n', '<leader>hq', gitsigns.setqflist)
   end,
 })
 
@@ -78,6 +77,16 @@ neogit.setup({
     staged_diff_split_kind = 'split',
   },
   graph_style = 'unicode',
+  git_services = {
+    ["github.com"] = {
+      pull_request = "https://github.com/${owner}/${repository}/compare/${branch_name}?expand=1",
+      commit = "https://github.com/${owner}/${repository}/commit/${oid}",
+      tree = "https://${host}/${owner}/${repository}/tree/${branch_name}",
+    },
+  },
+  telescope_sorter = function()
+    return require("telescope").extensions.fzf.native_fzf_sorter()
+  end,
   mappings = {
     commit_editor = {
       ["q"] = "Close",
