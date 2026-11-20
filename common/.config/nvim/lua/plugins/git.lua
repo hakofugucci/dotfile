@@ -56,7 +56,8 @@ vim.pack.add({
   'https://github.com/NeogitOrg/neogit',
 })
 
-require('neogit').setup({
+local neogit = require('neogit')
+neogit.setup({
   integrations = {
     telescope = true,
     diffview = true,
@@ -188,8 +189,8 @@ require('neogit').setup({
 })
 
 vim.keymap.set('n', '<leader>gg', function()
-  require('neogit').open()
+  neogit.open()
 end, { desc = 'Git: Neogit' })
 vim.keymap.set('n', '<leader>gc', function()
-  require('neogit').open({ 'commit' })
+  neogit.open({ 'commit' })
 end, { desc = 'Git: Neogit commit' })
