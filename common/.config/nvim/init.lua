@@ -19,6 +19,7 @@ require('plugins.yazi')
 require('plugins.dap')
 require('plugins.ui')
 require('plugins.oil')
+require('plugins.terminal')
 
 -- [[ visual ]]
 require('plugins.which-key')
