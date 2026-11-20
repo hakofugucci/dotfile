@@ -47,6 +47,16 @@ gitsigns.setup({
     map('n', '<leader>hS', gitsigns.stage_buffer, 'Git hunk: stage buffer')
     map('n', '<leader>hR', gitsigns.reset_buffer, 'Git hunk: reset buffer')
     map('n', '<leader>tb', gitsigns.toggle_current_line_blame, 'Toggle: git blame line')
+    map('n', '<leader>hq', function()
+      vim.cmd('diffoff!')
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
+        if name:match('^gitsigns://') then
+          vim.api.nvim_win_close(win, true)
+        end
+      end
+    end, 'Git hunk: close diff')
+    map('n', '<leader>hq', gitsigns.setqflist)
   end,
 })
 
@@ -200,9 +210,9 @@ end, { desc = 'Git: Neogit on vertical' })
 vim.keymap.set('n', '<leader>gx', function()
   neogit.open({ kind = 'split' })
 end, { desc = 'Git: Neogit on horizontal' })
-vim.keymap.set('n', '<leader>g~', function()
-  neogit.open({ cwd = '~' })
-end, { desc = 'Git: Neogit with different project' })
+-- vim.keymap.set('n', '<leader>g~', function()
+--   neogit.open({ cwd = '~' })
+-- end, { desc = 'Git: Neogit with different project' })
 
 
 vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<cr>', { desc = 'Git: diffview open' })
