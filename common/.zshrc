@@ -120,6 +120,8 @@ alias gp='git push'
 alias gs='git status -sb'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
+alias gsu='git stash -u'
+alias gsp='git stash pop'
 alias fuck='f'
 
 # cpp c23 build
