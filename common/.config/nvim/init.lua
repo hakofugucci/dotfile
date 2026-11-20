@@ -10,7 +10,7 @@ require('config.pack')
 require('plugins.colorscheme') -- visual
 require('plugins.telescope')
 require('plugins.treesitter')
-require('plugins.completion')
+require('plugins.completion') -- INFO: before plugins.lsp
 require('plugins.lsp')
 require('plugins.diagnostics')
 require('plugins.format')
@@ -23,4 +23,6 @@ require('plugins.oil')
 -- [[ visual ]]
 require('plugins.which-key')
 require('plugins.smear-cursor')
+
+-- [[ misc ]]
 require('plugins.im-select')

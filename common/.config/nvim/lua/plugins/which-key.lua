@@ -5,20 +5,19 @@ require('which-key').setup({
   delay = 0,
   icons = { mappings = vim.g.have_nerd_font },
   spec = {
-    { '<leader>h', group = 'git hunk', mode = { 'n', 'v' } },
-    { '<leader>t', group = 'toggle' },
-    { '<leader>s', group = 'search', mode = { 'n', 'v' } },
-    { '<leader>g', group = 'git', mode = { 'n' } },
-    { '<leader>d', group = 'debug', mode = { 'n' } },
-    { '<leader>x', group = 'diagnostics', mode = { 'n' } },
-    {        'gr', group = 'lsp actions', mode = { 'n' } },
-    -- { '<leader>m', group = 'make', mode = { 'n' } },
-    -- { '<leader>n', group = 'note', mode = { 'n' } },
-    -- { '<leader>c', group = 'code', mode = { 'n' } },
+    { '<leader>h', group = 'Git hunk', mode = { 'n', 'v' } },
+    { '<leader>t', group = 'Toggle' },
+    { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
+    { '<leader>g', group = 'Git', mode = { 'n', 'v' } },
+    { '<leader>d', group = 'Debug', mode = { 'n', 'v' } },
+    { '<leader>x', group = 'Diagnostics', mode = { 'n' } },
+    { 'gr', group = 'Lsp actions', mode = { 'n' } },
+    -- { '<leader>m', group = 'Make', mode = { 'n' } },
+    -- { '<leader>n', group = 'Note', mode = { 'n' } },
+    -- { '<leader>c', group = 'Code', mode = { 'n' } },
   },
 })
 
 vim.keymap.set('n', '<leader>?', function()
   require('which-key').show({ global = false })
 end, { desc = 'Keymaps: buffer-local' })
-
