@@ -1,3 +1,4 @@
+command_timeout = 2000
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
@@ -53,7 +54,6 @@ format = '[[($all )](fg:#769ff0 bg:#394260)]($style)'
 symbol = ""
 style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-command_timeout = 2000
 
 [bun]
 symbol = ""
