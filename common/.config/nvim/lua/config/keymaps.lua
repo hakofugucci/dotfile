@@ -1,6 +1,5 @@
 -- [[ Keymaps ]]
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Search: clear highlight' })
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>',    { desc = 'Terminal: exit terminal mode' })
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>',          { desc = 'Window: focus left' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>',          { desc = 'Window: focus right' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>',          { desc = 'Window: focus above' })
@@ -9,3 +8,4 @@ vim.keymap.set('n', 'x', '"_x',                     { desc = 'Edit: delete char 
 vim.keymap.set('n', '<Leader>:', 'q:',              { desc = 'Cmdline: history window' })
 vim.keymap.set('n', 'Q', 'q',                       { desc = 'Macro: toggle' })
 vim.keymap.set('n', 'q', '<Nop>',                   { desc = 'Macro: disabled (use Q)' })
+vim.keymap.set({'n', 't'}, '<C-t>', '<nop>',             { desc = 'Terminal: disabled'})
