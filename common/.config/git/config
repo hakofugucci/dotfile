@@ -7,3 +7,5 @@
     defaultBranch = main
 [include]
     path = ~/.gitconfig.local
+[commit]
+    template = /Users/hakof/.config/git/commit-template
