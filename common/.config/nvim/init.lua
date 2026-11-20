@@ -24,6 +24,7 @@ require('plugins.terminal')
 -- [[ visual ]]
 require('plugins.which-key')
 require('plugins.smear-cursor')
+require('plugins.image')
 
 -- [[ misc ]]
 require('plugins.im-select')

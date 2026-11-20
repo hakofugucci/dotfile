@@ -58,6 +58,7 @@
     clang-tools
     gcc
     firefox
+    imagemagick
   ];
   programs.direnv = {
     enable = true;
