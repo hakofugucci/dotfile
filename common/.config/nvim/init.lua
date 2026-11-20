@@ -20,6 +20,7 @@ require('plugins.dap')
 require('plugins.ui')
 require('plugins.oil')
 require('plugins.terminal')
+require('plugins.leetcode')
 
 -- [[ visual ]]
 require('plugins.which-key')
