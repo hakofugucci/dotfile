@@ -1,9 +1,21 @@
 { pkgs, ... }:
 {
-  # Determinate Nix が Nix 本体を管理するので無効化
+  # Disable because use Determinate Nix
   nix.enable = false;
-
+  # mac system default
+  system.defaults = {
+    NSGlobalDomain = {
+      AppleShowAllExtensions = true;
+      KeyRepeat = 2;
+      InitialKeyRepeat = 15;
+    };
+    dock.autohide = true;
+  };
   nixpkgs.hostPlatform = "aarch64-darwin";
+  # INFO: Overwrite your username instead of "hakof"
+  networking.hostName = "hakof";       # HostName
+  networking.localHostName = "hakof";  # LocalHostName (hakof.local)
+  networking.computerName = "hakof";   # visual name
 
   system.primaryUser = "hakof";
   system.stateVersion = 6;
@@ -12,20 +24,16 @@
 
   environment.systemPath = [ "/opt/homebrew/bin" "/opt/homebrew/sbin" ];
 
-  # zsh を使っているなら、シェル周りの統合を有効にする
+  # zsh integration
   programs.zsh.enable = true;
 
-  networking.hostName = "hakof";       # HostName
-  networking.localHostName = "hakof";  # LocalHostName (hakof.local)
-  networking.computerName = "hakof";   # 「システム設定」に表示される名前
-  # hosts/darwin/configuration.nix
   homebrew = {
     enable = true;
 
     onActivation = {
       autoUpdate = false;
       upgrade = false;
-      cleanup = "none";   # 後で "check" → "uninstall" に強める
+      cleanup = "uninstall"; # INFO: package doesn't declarate will uninstall
     };
 
     taps = [
@@ -59,7 +67,10 @@
       "wacom-tablet"
       "zoom"
       "zotero"
+      "discord"
     ];
+
+    masApps = {}; 
   };
 }
 

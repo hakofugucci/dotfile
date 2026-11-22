@@ -6,16 +6,16 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;   # NVIDIAドライバに必要
 
-  # --- ブート（新SSD内のESPだけを使う）---
+  # --- boot ---
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;   # ESPが1GBなので世代を制限
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # --- 基本 ---
+  # --- base ---
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Tokyo";
-  i18n.defaultLocale = "en_US.UTF-8";   # ttyで日本語が文字化けしないように
+  i18n.defaultLocale = "en_US.UTF-8";
   zramSwap.enable = true;
 
   users.users.hakof = {
@@ -27,13 +27,13 @@
   programs.nix-ld.enable = true;
   programs.ssh.startAgent = true;
 
-  # --- 自動清掃 ---
+  # --- auto cleanup ---
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 14d";
   };
-  nix.settings.auto-optimise-store = true;   # 同一ファイルをハードリンクで共有（容量の節約）
+  nix.settings.auto-optimise-store = true;
   # --- NVIDIA（RTX 4060）---
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
@@ -51,14 +51,14 @@
     extraOptions = [ "--unsupported-gpu" ];
   };
 
-  # --- niri / Hyprland（切り替え用）---
+  # --- niri / Hyprland ---
   programs.niri.enable = true;
   programs.hyprland.enable = true;
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
   services.gnome.gcr-ssh-agent.enable = false;
 
-  # --- 音 ---
+  # --- sound ---
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -66,7 +66,7 @@
     pulse.enable = true;
   };
 
-  # --- 日本語入力 ---
+  # --- japanese ---
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
@@ -84,5 +84,4 @@
 
   environment.systemPackages = with pkgs; [ git neovim ];
 
-  system.stateVersion = "26.05";   # 初回インストール時の値。以後変えない
-}
+  system.stateVersion = "26.05";}
