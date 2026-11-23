@@ -1,6 +1,12 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -11,7 +17,7 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, nix-darwin, ... }:
+  outputs = { nixpkgs, home-manager, nix-darwin, lanzaboote, ... }:
     let
       mkHome = system: modules:
         home-manager.lib.homeManagerConfiguration {
@@ -49,6 +55,7 @@
 
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         modules = [
+          lanzaboote.nixosModules.lanzaboote
           ./hosts/nixos/configuration.nix
           home-manager.nixosModules.home-manager
           {

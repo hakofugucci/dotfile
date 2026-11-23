@@ -1,16 +1,19 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   imports = [ ./hardware-configuration.nix ];
 
   # --- Nix ---
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;   # NVIDIAドライバに必要
+  nixpkgs.config.allowUnfree = true;   # NVIDIA driver
 
   # --- boot ---
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 10;   # ESPが1GBなので世代を制限
+  boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+    configurationLimit = 10;
+  };
   # --- base ---
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -82,6 +85,6 @@
     udev-gothic-nf
   ];
 
-  environment.systemPackages = with pkgs; [ git neovim ];
+  environment.systemPackages = with pkgs; [ git neovim  pkgs.sbctl ];
 
   system.stateVersion = "26.05";}
