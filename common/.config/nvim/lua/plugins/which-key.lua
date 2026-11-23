@@ -12,6 +12,7 @@ require('which-key').setup({
     { '<leader>d', group = 'Debug', mode = { 'n', 'v' } },
     { '<leader>x', group = 'Diagnostics', mode = { 'n' } },
     { 'gr', group = 'Lsp actions', mode = { 'n' } },
+    { '<leader>u', group = 'Surrond', mode = { 'n', 'x' } },
     -- { '<leader>m', group = 'Make', mode = { 'n' } },
     -- { '<leader>n', group = 'Note', mode = { 'n' } },
     -- { '<leader>c', group = 'Code', mode = { 'n' } },

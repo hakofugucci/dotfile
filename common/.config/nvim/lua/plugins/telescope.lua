@@ -18,7 +18,7 @@ telescope.setup({
 pcall(telescope.load_extension, 'fzf')
 pcall(telescope.load_extension, 'ui-select')
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Search: help tags' })
+vim.keymap.set('n', '<leader>sl', builtin.help_tags, { desc = 'Search: help tags' })
 vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = 'Search: keymaps' })
 vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Search: files' })
 vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = 'Search: telescope pickers' })
