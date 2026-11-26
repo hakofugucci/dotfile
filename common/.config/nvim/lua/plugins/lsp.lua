@@ -43,6 +43,15 @@ vim.lsp.config('nixd', {
     },
   },
 })
+
+-- hledger config
+vim.lsp.config("hledger_lsp", {
+  cmd = { "hledger-lsp" },
+  filetypes = { "hledger" },
+  root_markers = { ".git" },
+})
+vim.lsp.enable("hledger_lsp")
+
 -- enable only servers whose binary is on PATH
 local servers = {
   clangd = 'clangd',

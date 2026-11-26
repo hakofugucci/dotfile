@@ -4,6 +4,14 @@ vim.g.mapleader = ' '        -- <leader> set to space key
 vim.g.maplocalleader = ' '   -- <localleader> set to space key
 vim.g.have_nerd_font = true  -- nerd_font enabled
 vim.g.loaded_netrwPlugin = 1 -- netrwPlugin disable (for yazi)
+-- hledger integration
+vim.filetype.add({
+  extension = {
+    journal = "hledger",
+    hledger = "hledger",
+    prices = "hledger",
+  },
+})
 
 -- [[ Options ]]
 vim.o.shell = 'zsh'                       -- use zsh

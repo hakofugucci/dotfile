@@ -31,6 +31,7 @@
           ./home/dotfile.nix
           ./home/packages.nix
           ./home/darwin.nix
+          ./home/hledger.nix
         ];
       };
 
@@ -47,6 +48,7 @@
                 ./home/dotfile.nix
                 ./home/packages.nix
                 ./home/darwin.nix
+                ./home/hledger.nix
               ];
             };
           }
@@ -66,6 +68,7 @@
                 ./home/dotfile.nix
                 ./home/packages.nix
                 ./home/linux.nix
+                ./home/hledger.nix
                 ./home/nixos.nix
                 ./home/rice.nix
               ];

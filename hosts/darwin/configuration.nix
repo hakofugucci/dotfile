@@ -24,6 +24,20 @@
 
   environment.systemPath = [ "/opt/homebrew/bin" "/opt/homebrew/sbin" ];
 
+  services.tailscale.enable = true;
+
+  launchd.user.agents.syncthing = {
+    serviceConfig = {
+      ProgramArguments = [ "${pkgs.syncthing}/bin/syncthing" "--no-browser" ];
+      KeepAlive = true;
+      RunAtLoad = true;
+      StandardOutPath = "/tmp/syncthing.log";
+      StandardErrorPath = "/tmp/syncthing.err";
+    };
+  };
+
+  environment.systemPackages = [ pkgs.syncthing ];
+
   # zsh integration
   programs.zsh.enable = true;
 
@@ -42,12 +56,11 @@
     ];
 
     brews = [
-      "yabai"
-      "skhd"
-      "sketchybar"
-      "borders"
+      { name = "asmvik/formulae/yabai";        trusted = true; }
+      { name = "asmvik/formulae/skhd";         trusted = true; }
+      { name = "felixkratz/formulae/sketchybar"; trusted = true; }
+      { name = "felixkratz/formulae/borders";  trusted = true; }
     ];
-
     casks = [
       "adobe-creative-cloud"
       "alfred"
